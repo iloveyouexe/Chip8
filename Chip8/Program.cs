@@ -25,7 +25,7 @@
                         filePath = "D:\\Source\\Chip8\\Chip8\\bin\\Debug\\IBMLogo.ch8";
                         break;
                     default:
-                        Console.WriteLine("Select an actual option pls you clown");
+                        Console.WriteLine("Select an actual option");
                         return;
                 }
             }
