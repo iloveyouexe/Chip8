@@ -12,3 +12,4 @@ D:\Source\Chip8\Chip8\obj\Debug\net8.0\refint\Chip8.dll
 D:\Source\Chip8\Chip8\obj\Debug\net8.0\Chip8.pdb
 D:\Source\Chip8\Chip8\obj\Debug\net8.0\Chip8.genruntimeconfig.cache
 D:\Source\Chip8\Chip8\obj\Debug\net8.0\ref\Chip8.dll
+D:\Source\Chip8\Chip8\obj\Debug\net8.0\Chip8.sourcelink.json

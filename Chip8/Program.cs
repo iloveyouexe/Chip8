@@ -30,14 +30,33 @@
                 }
             }
             
+            List<string> GetRomNames()
+            {
+                var delimiter = "\\"; // depends on operating system
+                var files = Directory.GetFiles("Roms");
+                var roms = new List<string>();
+                foreach (var file in files)
+                {
+                    // rootDir\\Roms\\RomName into rootDir, Roms, RomName
+                    var filePathParts = file.Split(delimiter);
+                    var romName = filePathParts.Last();
+                    roms.Add(romName);
+                }
+
+                return roms;
+            }
+            
             using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
             {
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
                 {
                     var opcode = reader.ReadUInt16();
                     Console.WriteLine($"{opcode.ToString($"X")}");
+                    DisassembleOpcode(opcode);
                 }
             }
+
+            GetRomNames();
             ConvertToBytes();
         }
         
@@ -56,5 +75,34 @@
             var msb = (intValue & 0xFF00) >> 8;
             Console.WriteLine($"The most significant byte is 0x{msb:X2}");
         }
+        
+        static void DisassembleOpcode(ushort opcode)
+        {
+            var firstNibble = (opcode & 0xF000) >> 12;
+
+            switch (firstNibble)
+            {
+                case 0x0:
+                {
+                    // starting with 0x0
+                    // Example: 0x00E0 - Clear the screen
+                    // Example: 0x00EE - Return from a subroutine
+                    Console.WriteLine("Clear the screen or Return from a subroutine");
+                    break;
+                }
+                case 0x1:
+                {
+                    // Example: 0x1000 - Jump to address
+                    var address = opcode & 0x0FFF;
+                    Console.WriteLine($"Jump to address 0x{address:X3}");
+                    break;
+                }
+                    // finish other opcodes here
+                    default:
+                    Console.WriteLine($"Unknown opcode: 0x{opcode:X4}");
+                    break;
+            }
+        }
     }
 }
+
