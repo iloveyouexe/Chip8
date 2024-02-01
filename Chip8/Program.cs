@@ -16,17 +16,18 @@
                 switch (option)
                 {
                     case 1:
-                         filePath = "D:\\Source\\Chip8\\Chip8\\bin\\Debug\\Landing.ch8";
+                         filePath = @"Roms\Landing.ch8";
+                        ;
                         break;
                     case 2:
-                         filePath = "D:\\Source\\Chip8\\Chip8\\bin\\Debug\\Guess";
+                         filePath = @"Roms\Guess";
                         break;
                     case 3:
-                        filePath = "D:\\Source\\Chip8\\Chip8\\bin\\Debug\\IBMLogo.ch8";
+                        filePath = @"Roms\IBMLogo.ch8";
                         break;
                     default:
                         Console.WriteLine("Select an actual option");
-                        return;
+                        break;
                 }
             }
             
@@ -42,7 +43,6 @@
                     var romName = filePathParts.Last();
                     roms.Add(romName);
                 }
-
                 return roms;
             }
             
@@ -53,6 +53,7 @@
                     var highByte = reader.ReadByte();
                     var lowByte = reader.ReadByte();
                     ushort opcode = (ushort)(highByte << 8 | lowByte);
+                    // Console.WriteLine($"the opcode is {opcode:X4}");
                     // Console.WriteLine($"{opcode.ToString($"X")}");
                     DisassembleOpcode(opcode);
                 }
@@ -63,7 +64,7 @@
         
         static void ConvertToBytes()
         {
-            Console.WriteLine("Enter your Op Code (e.g 0x8034) ");
+            // Console.WriteLine("Enter your Op Code (e.g 0x8034) ");
             var opCode = Console.ReadLine();
             
             Console.WriteLine($"You have entered Op Code {opCode}.");
@@ -84,73 +85,75 @@
                 case 0x00E0:
                 {
                     Console.WriteLine($"{opcode:X4} CLS");
-                    break;
+                    return;
                 }
                 case 0x00EE:
                 {
                     Console.WriteLine($"{opcode:X4} RET");
-                    break;
+                    return;
                 }
             }
 
-            switch (opcode & 0xF00F)
+            switch (opcode & 0xF000)
             {
                 case 0x1000:
-                    Console.WriteLine($"{opcode:X4} JP {(opcode & 0x0FFF):X3}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} JP ${(opcode & 0x0FFF):X3}");
+                    return;
                 case 0x2000:
-                    Console.WriteLine($"{opcode:X4} CALL {(opcode & 0x0FFF):X3}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} CALL ${(opcode & 0x0FFF):X3}");
+                    return;
                 case 0x3000:
-                    Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, {(opcode & 0x00FF):X2}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    return;
                 case 0x4000:
-                    Console.WriteLine($"{opcode:X4} SNE V{(opcode & 0x0F00) >> 8:X1}, {(opcode & 0x00FF):X2}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} SNE V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    return;
                 case 0x5000:
                     Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                    break;
+                    return;
                 case 0x6000:
-                    Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, {(opcode & 0x00FF):X2}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    return;
                 case 0x7000:
-                    Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, {(opcode & 0x00FF):X2}");
-                    break;
+                    Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    return;
                 case 0x8000:
                 switch (opcode & 0x000F)
                 {
                     case 0x0:
                         Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x1:
                         Console.WriteLine($"{opcode:X4} OR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x2:
                         Console.WriteLine($"{opcode:X4} AND V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x3:
                         Console.WriteLine($"{opcode:X4} XOR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x4:
                         Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x5:
                         Console.WriteLine($"{opcode:X4} SUB V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0x6:
                         Console.WriteLine($"{opcode:X4} SHR V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
-                        break;
+                        return;
                     case 0x7:
                         Console.WriteLine($"{opcode:X4} SUBN V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                        break;
+                        return;
                     case 0xE:
                         Console.WriteLine($"{opcode:X4} SHL V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
-                        break;
+                        return;
                     default:
                         Console.WriteLine($"Unknown opcode: 0x{opcode:X4}");
-                        break;
+                        return;
                 }
-                break;
+                default:
+                    Console.WriteLine($"Unknown opcode: 0x{opcode:X4}");
+                    return;
             }
         }
     }
