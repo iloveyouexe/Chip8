@@ -10,6 +10,7 @@
             Console.WriteLine("1. for Landing");
             Console.WriteLine("2. for Guess");
             Console.WriteLine("3. for an IBM logo, this is going to make a million dollars. ");
+            Console.WriteLine("4. for a Maze demo. ");
 
             if (int.TryParse(Console.ReadLine(), out var option))
             {
@@ -24,6 +25,9 @@
                         break;
                     case 3:
                         filePath = @"Roms\IBMLogo.ch8";
+                        break;
+                    case 4:
+                        filePath = @"Roms\Maze.ch8";
                         break;
                     default:
                         Console.WriteLine("Select an actual option");
@@ -62,6 +66,8 @@
             ConvertToBytes();
         }
         
+        //http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+        
         static void ConvertToBytes()
         {
             // Console.WriteLine("Enter your Op Code (e.g 0x8034) ");
@@ -77,7 +83,6 @@
             var msb = (intValue & 0xFF00) >> 8;
             Console.WriteLine($"The most significant byte is 0x{msb:X2}");
         }
-        
         static void DisassembleOpcode(ushort opcode)
         {
             switch (opcode)
@@ -155,6 +160,7 @@
                     Console.WriteLine($"Unknown opcode: 0x{opcode:X4}");
                     return;
             }
+        
         }
     }
 }
