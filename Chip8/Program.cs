@@ -57,7 +57,7 @@
                     var highByte = reader.ReadByte();
                     var lowByte = reader.ReadByte();
                     ushort opcode = (ushort)(highByte << 8 | lowByte);
-                    // Console.WriteLine($"the opcode is {opcode:X4}");
+                    Console.WriteLine($"the opcode is {opcode:X4}");
                     // Console.WriteLine($"{opcode.ToString($"X")}");
                     DisassembleOpcode(opcode);
                 }
