@@ -59,7 +59,7 @@
                     ushort opcode = (ushort)(highByte << 8 | lowByte);
                     Console.WriteLine($"the opcode is {opcode:X4}");
                     // Console.WriteLine($"{opcode.ToString($"X")}");
-                    DisassembleOpcode(opcode);
+                    ExecuteOpcode(opcode);
                 }
             }
             GetRomNames();
@@ -83,19 +83,19 @@
             var msb = (intValue & 0xFF00) >> 8;
             Console.WriteLine($"The most significant byte is 0x{msb:X2}");
         }
-        static void DisassembleOpcode(ushort opcode)
+        static void ExecuteOpcode(ushort opcode)
         {
             switch (opcode)
             {
                 case 0x00E0:
                 {
-                    Console.WriteLine($"{opcode:X4} CLS");
-                    return;
+                    ClearScreen();
+                    break;;
                 }
                 case 0x00EE:
                 {
-                    Console.WriteLine($"{opcode:X4} RET");
-                    return;
+                    ReturnFromSubroutine();
+                    break;
                 }
             }
 
@@ -160,7 +160,18 @@
                     Console.WriteLine($"Unknown opcode: 0x{opcode:X4}");
                     return;
             }
-        
+        }
+
+        static void ClearScreen()
+        {
+            Console.WriteLine("CLS: Clearing the screen... ");
+            // reading on memory now to setup buffer 64x32 and clearing memory (on / off) for each pixel
+        }
+
+        static void ReturnFromSubroutine()
+        {
+            Console.WriteLine("RET: Returning from subroutine... ");
+            //nothing amazing happens here 
         }
     }
 }
