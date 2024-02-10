@@ -85,6 +85,7 @@
         }
         static void ExecuteOpcode(ushort opcode)
         {
+            
             switch (opcode)
             {
                 case 0x00E0:
@@ -162,10 +163,21 @@
             }
         }
 
+        // memory assignments
+        static byte[] memory = new byte[4096];
+        // display assignments
+        static bool[,] displayBuffer = new bool[64, 32];
+        
         static void ClearScreen()
         {
             Console.WriteLine("CLS: Clearing the screen... ");
-            // reading on memory now to setup buffer 64x32 and clearing memory (on / off) for each pixel
+            for (int y = 0; y < 32; y++)
+            {
+                for (int x = 0; x < 64; x++)
+                {
+                    displayBuffer[x, y] = false; // Set each pixel to off
+                }
+            }
         }
 
         static void ReturnFromSubroutine()
