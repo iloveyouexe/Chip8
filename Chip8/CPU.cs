@@ -40,9 +40,6 @@ namespace Chip8
             PC = (ushort)nnn;
         }
 
-        // 3xkk - SE Vx, byte
-        //     Skip next instruction if Vx = kk.
-        //     The interpreter compares register Vx to kk, and if they are equal, increments the program counter by 2.
         public void SkipNextInstructionOnEquals(ushort opcode)
         {
             var nn = (opcode & 0x00FF);
@@ -141,10 +138,5 @@ namespace Chip8
             PC += 2;
         }
         
-        // 8xy7 - SUBN Vx, Vy
-        // Set Vx = Vy - Vx, set VF = NOT borrow.
-        //     If Vy > Vx, then VF is set to 1, otherwise 0. Then Vx is subtracted from Vy, and the results stored in Vx.
-
-
     }
 }
