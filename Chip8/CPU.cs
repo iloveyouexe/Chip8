@@ -39,6 +39,39 @@ namespace Chip8
             SP++;
             PC = (ushort)nnn;
         }
+
+        // 3xkk - SE Vx, byte
+        //     Skip next instruction if Vx = kk.
+        //     The interpreter compares register Vx to kk, and if they are equal, increments the program counter by 2.
+        public void SkipNextInstructionOnEquals(ushort opcode)
+        {
+            var nn = (opcode & 0x00FF);
+            var x = (opcode & 0x0F00) >> 8;
+            Console.WriteLine("SE V: Skipping next instruction if equals... ");
+            if (Registers[x] == nn)
+            {
+                PC += 4;
+            }
+            else
+            {
+                PC += 2;
+            }
+        }
+        
+        public void SkipNextInstructionNotOnEquals(ushort opcode)
+        {
+            var nn = (opcode & 0x00FF);
+            var x = (opcode & 0x0F00) >> 8;
+            Console.WriteLine("SE V: Skipping next instruction if not equal... ");
+            if (Registers[x] != nn)
+            {
+                PC += 4;
+            }
+            else
+            {
+                PC += 2;
+            }
+        }
         
         public void LoadRegister(ushort opcode)
         {
@@ -98,5 +131,20 @@ namespace Chip8
             Registers[x] >>= 1;
             PC += 2;
         }
+        
+        public void SubtractNRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8; 
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[0xF] = (byte)(Registers[y] > Registers[x] ? 1 : 0);
+            Registers[y] -= Registers[x];
+            PC += 2;
+        }
+        
+        // 8xy7 - SUBN Vx, Vy
+        // Set Vx = Vy - Vx, set VF = NOT borrow.
+        //     If Vy > Vx, then VF is set to 1, otherwise 0. Then Vx is subtracted from Vy, and the results stored in Vx.
+
+
     }
 }
