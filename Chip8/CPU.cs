@@ -137,6 +137,5 @@ namespace Chip8
             Registers[y] -= Registers[x];
             PC += 2;
         }
-        
     }
 }
