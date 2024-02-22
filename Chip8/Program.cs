@@ -142,7 +142,7 @@ namespace Chip8
                     }
                     break;
             }
-
+                        // this is probably getting nuked
             cpu.PC += 2; // remove later, prevents being stuck in a loop 
         }
     }
