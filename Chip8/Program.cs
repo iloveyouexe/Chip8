@@ -114,36 +114,41 @@ namespace Chip8
                         case 0x0:
                             Console.WriteLine(
                                 $"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                                cpu.LoadRegister(opcode);
                             break;
                         case 0x1:
                             Console.WriteLine(
                                 $"{opcode:X4} OR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            cpu.OrRegister(opcode);
                             break;
                         case 0x2:
                             Console.WriteLine(
                                 $"{opcode:X4} AND V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                                cpu.AndRegister(opcode);
                             break;
                         case 0x3:
                             Console.WriteLine(
                                 $"{opcode:X4} XOR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                                cpu.XorRegister(opcode);
                             break;
                         case 0x4:
                             Console.WriteLine(
                                 $"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                                cpu.AddRegister(opcode);
                             break;
                         case 0x5:
                             Console.WriteLine(
                                 $"{opcode:X4} SUB V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                                cpu.SubtractRegister(opcode);
                             break;
                         case 0x6:
                             Console.WriteLine(
                                 $"{opcode:X4} SHR V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
+                                cpu.ShiftRightRegister(opcode);
                             break;
-                    }
+                    } 
                     break;
             }
-                        // this is probably getting nuked
-            cpu.PC += 2; // remove later, prevents being stuck in a loop 
         }
     }
 }

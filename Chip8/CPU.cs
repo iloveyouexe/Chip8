@@ -39,5 +39,64 @@ namespace Chip8
             SP++;
             PC = (ushort)nnn;
         }
+        
+        public void LoadRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[x] = Registers[y];
+            PC += 2;
+        }
+
+        public void OrRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[x] |= Registers[y];
+            PC += 2;
+        }
+
+        public void AndRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[x] &= Registers[y];
+            PC += 2;
+        }
+
+        public void XorRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[x] ^= Registers[y];
+            PC += 2;
+        }
+
+        public void AddRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            ushort sum = (ushort)(Registers[x] + Registers[y]); // for overflow
+            Registers[0xF] = (byte)(sum > 255 ? 1 : 0); 
+            Registers[x] = (byte)(sum & 0xFF); 
+            PC += 2;
+        }
+
+        public void SubtractRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            Registers[0xF] = (byte)(Registers[x] > Registers[y] ? 1 : 0);
+            Registers[x] -= Registers[y];
+            PC += 2;
+        }
+
+        public void ShiftRightRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            Registers[0xF] = (byte)(Registers[x] & 0x1);
+            Registers[x] >>= 1;
+            PC += 2;
+        }
     }
 }
