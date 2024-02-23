@@ -170,6 +170,160 @@ namespace Chip8
             Registers[x] <<= 1; 
             PC += 2; 
         }
-        
+
+        public void ReadRegistersV0ToVxFromMemory(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StoreRegistersV0ToVxInMemory(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StoreBCDOfVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetIToSpriteAddressInVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddVxToI(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetSoundTimerToVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDelayTimerToVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WaitForKeyAndStoreInVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToDelayTimer(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfKeyInVxNotPressed(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfKeyInVxPressed(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawSprite(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToRandomByteAnd(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void JumpToAddressPlusV0(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetIToAddress(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfVxNotEqualsVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShiftVxLeft(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToVyMinusVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShiftVxRight(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void JumpToAddress(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfVxEqualsByte(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfVxNotEqualsByte(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SkipIfVxEqualsVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToByte(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddByteToVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToVxAndVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToVxOrVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVxToVxXorVy(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddVyToVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SubtractVyFromVx(ushort opcode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

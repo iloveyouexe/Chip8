@@ -64,97 +64,178 @@ namespace Chip8
 
         //http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
-        static void ExecuteOpcode(CPU cpu)
-        {
-            var highByte = cpu.RAM[cpu.PC];
-            var lowByte = cpu.RAM[cpu.PC+1];
-            
-            ushort opcode = (ushort)(highByte << 8 | lowByte);
-            switch (opcode)
-            {
-                case 0x00E0:
-                {
-                    cpu.ClearScreen(opcode);
-                    break;
-                }
-                case 0x00EE:
-                {
-                    cpu.ReturnFromSubroutine(opcode);
-                    break;
-                }
-            }
+       static void ExecuteOpcode(CPU cpu)
+{
+    var highByte = cpu.RAM[cpu.PC];
+    var lowByte = cpu.RAM[cpu.PC + 1];
 
-            switch (opcode & 0xF000)
+    ushort opcode = (ushort)(highByte << 8 | lowByte);
+    switch (opcode)
+    {
+        case 0x00E0:
+            // CLS
+            cpu.ClearScreen(opcode);
+            break;
+        case 0x00EE:
+            // RET
+            cpu.ReturnFromSubroutine(opcode);
+            break;
+        // Add other specific opcodes here if necessary
+    }
+
+    switch (opcode & 0xF000)
+    {
+        case 0x0000:
+            // System instructions (0nnn - SYS addr) are usually ignored in modern interpreters
+            break;
+        case 0x1000:
+            // JP addr
+            cpu.JumpToAddress(opcode);
+            break;
+        case 0x2000:
+            // CALL addr
+            cpu.CallSubroutine(opcode);
+            break;
+        case 0x3000:
+            // SE Vx, byte
+            cpu.SkipIfVxEqualsByte(opcode);
+            break;
+        case 0x4000:
+            // SNE Vx, byte
+            cpu.SkipIfVxNotEqualsByte(opcode);
+            break;
+        case 0x5000:
+            // SE Vx, Vy
+            cpu.SkipIfVxEqualsVy(opcode);
+            break;
+        case 0x6000:
+            // LD Vx, byte
+            cpu.SetVxToByte(opcode);
+            break;
+        case 0x7000:
+            // ADD Vx, byte
+            cpu.AddByteToVx(opcode);
+            break;
+        case 0x8000:
+            // Arithmetic and logical instructions (8xy*)
+            switch (opcode & 0x000F)
             {
-                case 0x1000:
-                    Console.WriteLine($"{opcode:X4} JP ${(opcode & 0x0FFF):X3}");
+                case 0x0:
+                    // LD Vx, Vy
+                    cpu.SetVxToVy(opcode);
                     break;
-                case 0x2000:
-                    Console.WriteLine($"{opcode:X4} CALL ${(opcode & 0x0FFF):X3}");
-                    cpu.CallSubroutine(opcode);
+                case 0x1:
+                    // OR Vx, Vy
+                    cpu.SetVxToVxOrVy(opcode);
                     break;
-                case 0x3000:
-                    Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
-                    cpu.SkipNextInstructionOnEquals(opcode);
+                case 0x2:
+                    // AND Vx, Vy
+                    cpu.SetVxToVxAndVy(opcode);
                     break;
-                case 0x4000:
-                    Console.WriteLine($"{opcode:X4} SNE V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
-                    cpu.SkipNextInstructionNotOnEquals(opcode);
+                case 0x3:
+                    // XOR Vx, Vy
+                    cpu.SetVxToVxXorVy(opcode);
                     break;
-                case 0x5000:
-                    Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                    cpu.SkipIfEqual(opcode);
+                case 0x4:
+                    // ADD Vx, Vy
+                    cpu.AddVyToVx(opcode);
                     break;
-                case 0x6000:
-                    Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
-                    cpu.LoadRegisterByte(opcode);
+                case 0x5:
+                    // SUB Vx, Vy
+                    cpu.SubtractVyFromVx(opcode);
                     break;
-                case 0x7000:
-                    Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
-                    cpu.AddRegisterByte(opcode);
+                case 0x6:
+                    // SHR Vx {, Vy}
+                    cpu.ShiftVxRight(opcode);
                     break;
-                case 0x8000:
-                    switch (opcode & 0x000F)
-                    {
-                        case 0x0:
-                            Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.LoadRegister(opcode);
-                            break;
-                        case 0x1:
-                            Console.WriteLine($"{opcode:X4} OR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.OrRegister(opcode);
-                            break;
-                        case 0x2:
-                            Console.WriteLine($"{opcode:X4} AND V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.AndRegister(opcode);
-                            break;
-                        case 0x3:
-                            Console.WriteLine($"{opcode:X4} XOR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.XorRegister(opcode);
-                            break;
-                        case 0x4:
-                            Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.AddRegister(opcode);
-                            break;
-                        case 0x5:
-                            Console.WriteLine($"{opcode:X4} SUB V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
-                            cpu.SubtractRegister(opcode);
-                            break;
-                        case 0x6:
-                            Console.WriteLine($"{opcode:X4} SHR V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
-                            cpu.ShiftRightRegister(opcode);
-                            break;
-                        case 0x7:
-                            Console.WriteLine($"{opcode:X4} SUBN V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
-                            cpu.SubtractNRegister(opcode);
-                            break;
-                        case 0xE:
-                            Console.WriteLine($"{opcode:X4} SHL V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
-                            cpu.ShiftLeftRegister(opcode);
-                            break;
-                    }
+                case 0x7:
+                    // SUBN Vx, Vy
+                    cpu.SetVxToVyMinusVx(opcode);
+                    break;
+                case 0xE:
+                    // SHL Vx {, Vy}
+                    cpu.ShiftVxLeft(opcode);
                     break;
             }
+            break;
+        case 0x9000:
+            // SNE Vx, Vy
+            cpu.SkipIfVxNotEqualsVy(opcode);
+            break;
+        case 0xA000:
+            // LD I, addr
+            cpu.SetIToAddress(opcode);
+            break;
+        case 0xB000:
+            // JP V0, addr
+            cpu.JumpToAddressPlusV0(opcode);
+            break;
+        case 0xC000:
+            // RND Vx, byte
+            cpu.SetVxToRandomByteAnd(opcode);
+            break;
+        case 0xD000:
+            // DRW Vx, Vy, nibble
+            cpu.DrawSprite(opcode);
+            break;
+        case 0xE000:
+            switch (opcode & 0x00FF)
+            {
+                case 0x9E:
+                    // SKP Vx
+                    cpu.SkipIfKeyInVxPressed(opcode);
+                    break;
+                case 0xA1:
+                    // SKNP Vx
+                    cpu.SkipIfKeyInVxNotPressed(opcode);
+                    break;
+            }
+            break;
+        case 0xF000:
+            switch (opcode & 0x00FF)
+            {
+                case 0x07:
+                    // LD Vx, DT
+                    cpu.SetVxToDelayTimer(opcode);
+                    break;
+                case 0x0A:
+                    // LD Vx, K
+                    cpu.WaitForKeyAndStoreInVx(opcode);
+                    break;
+                case 0x15:
+                    // LD DT, Vx
+                    cpu.SetDelayTimerToVx(opcode);
+                    break;
+                case 0x18:
+                    // LD ST, Vx
+                    cpu.SetSoundTimerToVx(opcode);
+                    break;
+                case 0x1E:
+                    // ADD I, Vx
+                    cpu.AddVxToI(opcode);
+                    break;
+                case 0x29:
+                    // LD F, Vx
+                    cpu.SetIToSpriteAddressInVx(opcode);
+                    break;
+                case 0x33:
+                    // LD B, Vx
+                    cpu.StoreBCDOfVx(opcode);
+                    break;
+                case 0x55:
+                    // LD [I], Vx
+                    cpu.StoreRegistersV0ToVxInMemory(opcode);
+                    break;
+                case 0x65:
+                    // LD Vx, [I]
+                    cpu.ReadRegistersV0ToVxFromMemory(opcode);
+                    break;
+                // Add Super Chip-48 instructions here if needed
+            }
+            break;
+          }
+        // Increment PC to the next instruction, typically by 2 bytes, unless the instruction modified PC
+        cpu.PC += 2;
         }
     }
 }
