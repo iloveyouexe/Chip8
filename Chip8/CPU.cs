@@ -37,7 +37,7 @@ namespace Chip8
             PC = (ushort)nnn;
         }
 
-        public void SkipNextInstructionOnEquals(ushort opcode)
+        public void SkipIfVxEqualsByte(ushort opcode)
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
@@ -51,7 +51,7 @@ namespace Chip8
             }
         }
         
-        public void SkipNextInstructionNotOnEquals(ushort opcode)
+        public void SkipIfVxNotEqualsByte(ushort opcode)
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
@@ -65,7 +65,7 @@ namespace Chip8
             }
         }
         
-        public void SkipIfEqual(ushort opcode)
+        public void SkipIfVxEqualsVy(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -79,7 +79,7 @@ namespace Chip8
             }
         }
 
-        public void LoadRegisterByte(ushort opcode)
+        public void SetVxToByte(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var kk = (byte)(opcode & 0x00FF);
@@ -87,7 +87,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void AddRegisterByte(ushort opcode)
+        public void AddByteToVx(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var kk = (byte)(opcode & 0x00FF);
@@ -95,7 +95,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void LoadRegister(ushort opcode)
+        public void SetVxToVy(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -103,7 +103,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void OrRegister(ushort opcode)
+        public void SetVxToVxOrVy(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -111,7 +111,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void AndRegister(ushort opcode)
+        public void SetVxToVxAndVy(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -119,7 +119,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void XorRegister(ushort opcode)
+        public void SetVxToVxXorVy(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -127,7 +127,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void AddRegister(ushort opcode)
+        public void AddVyToVx(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -137,7 +137,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void SubtractRegister(ushort opcode)
+        public void SubtractVyFromVx(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -146,7 +146,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void ShiftRightRegister(ushort opcode)
+        public void ShiftVxRight(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             Registers[0xF] = (byte)(Registers[x] & 0x1);
@@ -154,7 +154,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void SubtractNRegister(ushort opcode)
+        public void SetVxToVyMinusVx(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8; 
             var y = (opcode & 0x00F0) >> 4;
@@ -255,75 +255,11 @@ namespace Chip8
         {
             throw new NotImplementedException();
         }
-
-        public void SetVxToVyMinusVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ShiftVxRight(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void JumpToAddress(ushort opcode)
         {
             throw new NotImplementedException();
         }
-
-        public void SkipIfVxEqualsByte(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SkipIfVxNotEqualsByte(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SkipIfVxEqualsVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToByte(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddByteToVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToVxAndVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToVxOrVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToVxXorVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddVyToVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SubtractVyFromVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
