@@ -49,9 +49,6 @@ namespace Chip8
                 {
                     cpu.RAM[cpu.PC] = reader.ReadByte();
                     cpu.PC++;
-                    
-                    // Console.WriteLine($"the opcode is {opcode:X4}");
-                    // ExecuteOpcode(opcode, cpu);
                 }
             }
             
@@ -86,7 +83,7 @@ namespace Chip8
     switch (opcode & 0xF000)
     {
         case 0x0000:
-            // System instructions (0nnn - SYS addr) are usually ignored in modern interpreters
+            // System
             break;
         case 0x1000:
             // JP addr
@@ -117,7 +114,7 @@ namespace Chip8
             cpu.AddByteToVx(opcode);
             break;
         case 0x8000:
-            // Arithmetic and logical instructions (8xy*)
+            // math.lame
             switch (opcode & 0x000F)
             {
                 case 0x0:
@@ -230,11 +227,9 @@ namespace Chip8
                     // LD Vx, [I]
                     cpu.ReadRegistersV0ToVxFromMemory(opcode);
                     break;
-                // Add Super Chip-48 instructions here if needed
             }
             break;
           }
-        // Increment PC to the next instruction, typically by 2 bytes, unless the instruction modified PC
         cpu.PC += 2;
         }
     }
