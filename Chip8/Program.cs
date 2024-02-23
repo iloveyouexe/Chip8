@@ -103,55 +103,54 @@ namespace Chip8
                     break;
                 case 0x5000:
                     Console.WriteLine($"{opcode:X4} SE V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                    cpu.SkipIfEqual(opcode);
                     break;
                 case 0x6000:
                     Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    cpu.LoadRegisterByte(opcode);
                     break;
                 case 0x7000:
                     Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, ${(opcode & 0x00FF):X2}");
+                    cpu.AddRegisterByte(opcode);
                     break;
                 case 0x8000:
                     switch (opcode & 0x000F)
                     {
                         case 0x0:
-                            Console.WriteLine(
-                                $"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} LD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.LoadRegister(opcode);
                             break;
                         case 0x1:
-                            Console.WriteLine(
-                                $"{opcode:X4} OR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} OR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.OrRegister(opcode);
                             break;
                         case 0x2:
-                            Console.WriteLine(
-                                $"{opcode:X4} AND V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} AND V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.AndRegister(opcode);
                             break;
                         case 0x3:
-                            Console.WriteLine(
-                                $"{opcode:X4} XOR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} XOR V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.XorRegister(opcode);
                             break;
                         case 0x4:
-                            Console.WriteLine(
-                                $"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} ADD V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.AddRegister(opcode);
                             break;
                         case 0x5:
-                            Console.WriteLine(
-                                $"{opcode:X4} SUB V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
+                            Console.WriteLine($"{opcode:X4} SUB V{(opcode & 0x0F00) >> 8:X1}, V{(opcode & 0x00F0) >> 4:X1}");
                             cpu.SubtractRegister(opcode);
                             break;
                         case 0x6:
-                            Console.WriteLine(
-                                $"{opcode:X4} SHR V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
+                            Console.WriteLine($"{opcode:X4} SHR V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
                             cpu.ShiftRightRegister(opcode);
                             break;
                         case 0x7:
-                            Console.WriteLine(
-                                $"{opcode:X4} SUBN V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
+                            Console.WriteLine($"{opcode:X4} SUBN V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
                             cpu.SubtractNRegister(opcode);
+                            break;
+                        case 0xE:
+                            Console.WriteLine($"{opcode:X4} SHL V{(opcode & 0x0F00) >> 8:X1} {{, V{(opcode & 0x00F0) >> 4:X1}}}");
+                            cpu.ShiftLeftRegister(opcode);
                             break;
                     }
                     break;

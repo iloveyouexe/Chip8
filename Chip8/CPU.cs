@@ -18,14 +18,12 @@ namespace Chip8
 
         public void ClearScreen(ushort opcode)
         {
-            Console.WriteLine("CLS: Clearing the screen... ");
             for (int i = 0; i < Display.Length; i++) Display[i] = 0;
             PC += 2;
         }
 
         public void ReturnFromSubroutine(ushort opcode)
         {
-            Console.WriteLine("RET: Returning from subroutine... ");
             SP--;
             Stack[SP] = PC;
             PC += 2;
@@ -34,7 +32,6 @@ namespace Chip8
         public void CallSubroutine(ushort opcode)
         {
             var nnn = (opcode & 0x0FFF);
-            Console.WriteLine("CALL: Calling a subroutine... ");
             Stack[SP] = PC;
             SP++;
             PC = (ushort)nnn;
@@ -44,7 +41,6 @@ namespace Chip8
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
-            Console.WriteLine("SE V: Skipping next instruction if equals... ");
             if (Registers[x] == nn)
             {
                 PC += 4;
@@ -59,7 +55,6 @@ namespace Chip8
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
-            Console.WriteLine("SE V: Skipping next instruction if not equal... ");
             if (Registers[x] != nn)
             {
                 PC += 4;
@@ -68,6 +63,36 @@ namespace Chip8
             {
                 PC += 2;
             }
+        }
+        
+        public void SkipIfEqual(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            if (Registers[x] == Registers[y])
+            {
+                PC += 4;
+            }
+            else
+            {
+                PC += 2;
+            }
+        }
+
+        public void LoadRegisterByte(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var kk = (byte)(opcode & 0x00FF);
+            Registers[x] = kk;
+            PC += 2;
+        }
+
+        public void AddRegisterByte(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var kk = (byte)(opcode & 0x00FF);
+            Registers[x] += kk;
+            PC += 2;
         }
         
         public void LoadRegister(ushort opcode)
@@ -137,5 +162,14 @@ namespace Chip8
             Registers[y] -= Registers[x];
             PC += 2;
         }
+        
+        public void ShiftLeftRegister(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            Registers[0xF] = (byte)((Registers[x] & 0x80) == 0x80 ? 1 : 0); 
+            Registers[x] <<= 1; 
+            PC += 2; 
+        }
+        
     }
 }
