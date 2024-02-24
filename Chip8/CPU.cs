@@ -163,7 +163,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void ShiftLeftRegister(ushort opcode)
+        public void ShiftVxLeft(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             Registers[0xF] = (byte)((Registers[x] & 0x80) == 0x80 ? 1 : 0); 
@@ -171,6 +171,45 @@ namespace Chip8
             PC += 2; 
         }
 
+        public void SkipIfVxNotEqualsVy(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+            var y = (opcode & 0x00F0) >> 4;
+            if (Registers[x] != Registers[y])
+            {
+                PC += 4;
+            }
+            else
+            {
+                PC += 2;
+            }
+        }
+        
+        public void SetIToAddress(ushort opcode)
+        {
+            var address = (ushort)(opcode & 0x0FFF);
+            I = address;
+            PC += 2;
+        }
+        
+        public void JumpToAddressPlusV0(ushort opcode)
+        {
+            var nnn = (ushort)(opcode & 0x0FFF);
+            var newAddress = (ushort)(nnn + Registers[0]);
+            PC = newAddress;
+        }
+        
+        public void SetVxToRandomByteAnd(ushort opcode)
+        {
+            Random rand = new Random();
+            byte randomByte = (byte)rand.Next(0, 256);
+            var kk = (byte)(opcode & 0x00FF);
+            var x = (ushort)(opcode & 0x0F00) >> 8;
+
+            Registers[x] = (byte)(randomByte & kk);
+            PC += 2;
+        }
+        
         public void ReadRegistersV0ToVxFromMemory(ushort opcode)
         {
             throw new NotImplementedException();
@@ -227,31 +266,6 @@ namespace Chip8
         }
 
         public void DrawSprite(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToRandomByteAnd(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void JumpToAddressPlusV0(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetIToAddress(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SkipIfVxNotEqualsVy(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ShiftVxLeft(ushort opcode)
         {
             throw new NotImplementedException();
         }
