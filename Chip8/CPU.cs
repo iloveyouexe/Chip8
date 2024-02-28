@@ -27,6 +27,11 @@ namespace Chip8
             SP--;
             Stack[SP] = PC;
             PC += 2;
+        }        
+        public void JumpToAddress(ushort opcode)
+        {
+            var nnn = (opcode & 0x0FFF);
+            PC = (ushort)nnn;
         }
 
         public void CallSubroutine(ushort opcode)
@@ -210,70 +215,31 @@ namespace Chip8
             PC += 2;
         }
         
-        public void ReadRegistersV0ToVxFromMemory(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StoreRegistersV0ToVxInMemory(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StoreBCDOfVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetIToSpriteAddressInVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddVxToI(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetSoundTimerToVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetDelayTimerToVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void WaitForKeyAndStoreInVx(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVxToDelayTimer(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SkipIfKeyInVxNotPressed(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SkipIfKeyInVxPressed(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DrawSprite(ushort opcode)
         {
-            throw new NotImplementedException();
+            var x = Registers[(opcode & 0x0F00) >> 8];
+            var y = Registers[(opcode & 0x00F0) >> 4];
+            ushort height = (ushort)(opcode & 0x000F);
+            ushort pixel;
+
+            Registers[0xF] = 0;  // Assume no collision to start with
+
+            for (int yLine = 0; yLine < height; yLine++)
+            {
+                pixel = RAM[I + yLine];
+                for (int xLine = 0; xLine < 8; xLine++)
+                {
+                    if ((pixel & (0x80 >> xLine)) != 0) 
+                    {
+                        int index = (x + xLine + ((y + yLine) * 64)) % (64 * 32); // % modulus do not remove
+                        if (Display[index] == 1)
+                        {
+                            Registers[0xF] = 1; 
+                        }
+                        Display[index] ^= 1;
+                    }
+                }
+            }
         }
-        
-        public void JumpToAddress(ushort opcode)
-        {
-            throw new NotImplementedException();
-        }
-        
     }
 }

@@ -180,11 +180,9 @@ namespace Chip8
             {
                 case 0x9E:
                     // SKP Vx
-                    cpu.SkipIfKeyInVxPressed(opcode);
                     break;
                 case 0xA1:
                     // SKNP Vx
-                    cpu.SkipIfKeyInVxNotPressed(opcode);
                     break;
             }
             break;
@@ -193,39 +191,30 @@ namespace Chip8
             {
                 case 0x07:
                     // LD Vx, DT
-                    cpu.SetVxToDelayTimer(opcode);
                     break;
                 case 0x0A:
                     // LD Vx, K
-                    cpu.WaitForKeyAndStoreInVx(opcode);
                     break;
                 case 0x15:
                     // LD DT, Vx
-                    cpu.SetDelayTimerToVx(opcode);
                     break;
                 case 0x18:
                     // LD ST, Vx
-                    cpu.SetSoundTimerToVx(opcode);
                     break;
                 case 0x1E:
                     // ADD I, Vx
-                    cpu.AddVxToI(opcode);
                     break;
                 case 0x29:
                     // LD F, Vx
-                    cpu.SetIToSpriteAddressInVx(opcode);
                     break;
                 case 0x33:
                     // LD B, Vx
-                    cpu.StoreBCDOfVx(opcode);
                     break;
                 case 0x55:
                     // LD [I], Vx
-                    cpu.StoreRegistersV0ToVxInMemory(opcode);
                     break;
                 case 0x65:
                     // LD Vx, [I]
-                    cpu.ReadRegistersV0ToVxFromMemory(opcode);
                     break;
             }
             break;
