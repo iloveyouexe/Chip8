@@ -337,7 +337,6 @@ namespace Chip8
             PC += 2;
         }
         
-        // 
         public ushort GetSpriteAddress(byte digit)
         {
             return (ushort)(digit * 5);
