@@ -63,23 +63,23 @@ namespace Chip8
         //http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
        static void ExecuteOpcode(CPU cpu)
-{
-    var highByte = cpu.RAM[cpu.PC];
-    var lowByte = cpu.RAM[cpu.PC + 1];
+        {
+            var highByte = cpu.RAM[cpu.PC];
+            var lowByte = cpu.RAM[cpu.PC + 1];
 
-    ushort opcode = (ushort)(highByte << 8 | lowByte);
-    switch (opcode)
-    {
-        case 0x00E0:
-            // CLS
-            cpu.ClearScreen(opcode);
-            break;
-        case 0x00EE:
-            // RET
-            cpu.ReturnFromSubroutine(opcode);
-            break;
-        // Add other specific opcodes here if necessary
-    }
+            ushort opcode = (ushort)(highByte << 8 | lowByte);
+            switch (opcode)
+            {
+                case 0x00E0:
+                    // CLS
+                    cpu.ClearScreen(opcode);
+                    break;
+                case 0x00EE:
+                    // RET
+                    cpu.ReturnFromSubroutine(opcode);
+                    break;
+                // Add other specific opcodes here if necessary
+            }
 
     switch (opcode & 0xF000)
     {
@@ -117,8 +117,8 @@ namespace Chip8
         case 0x8000:
             // math.lame
             switch (opcode & 0x000F)
-            {
-                case 0x0:
+            { 
+                case 0x0: 
                     // LD Vx, Vy
                     cpu.SetVxToVy(opcode);
                     break;
