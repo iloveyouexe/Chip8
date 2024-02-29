@@ -252,6 +252,81 @@ namespace Chip8
             {
                 PC += 2;
             }
-        }    
+        }
+
+        public void SkipIfKeyIsNotPressed(ushort opcode)
+        {
+            if ((Keyboard & (1 << Registers[(opcode & 0x0F00) >> 8])) == 0)
+            {
+                PC += 4;
+            }
+            else
+            {
+                PC += 2;
+            }
+        }
+        
+        public void SetVxToDelayTimer(ushort opcode)
+        {
+            Registers[(opcode & 0x0F00) >> 8] = DelayTimer;
+            PC += 2;
+        }
+        
+        public void SetDelayTimerToVx(ushort opcode)
+        {
+            DelayTimer = Registers[(opcode & 0x0F00) >> 8];
+            PC += 2;
+        }
+
+        public void SetSoundTimerToVx(ushort opcode)
+        {
+            SoundTimer = Registers[(opcode & 0x0F00) >> 8];
+            PC += 2;
+        }
+
+        public void AddVxToI(ushort opcode)
+        {
+            I += Registers[(opcode & 0x0F00) >> 8];
+            PC += 2;
+        }
+
+        public void SetIToSpriteLocationForVx(ushort opcode)
+        {
+            I = GetSpriteAddress(Registers[(opcode & 0x0F00) >> 8]);
+            PC += 2;
+        }
+
+        public void StoreBCDOfVxAtI(ushort opcode)
+        {
+            int value = Registers[(opcode & 0x0F00) >> 8];
+            RAM[I] = (byte)(value / 100);
+            RAM[I + 1] = (byte)((value / 10) % 10);
+            RAM[I + 2] = (byte)(value % 10);
+            PC += 2;
+        }
+
+        public void StoreV0ToVxInMemoryStartingAtI(ushort opcode)
+        {
+            for (int i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
+            {
+                RAM[I + i] = Registers[i];
+            }
+            PC += 2;
+        }
+
+        public void FillV0ToVxWithValuesFromMemoryStartingAtI(ushort opcode)
+        {
+            for (int i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
+            {
+                Registers[i] = RAM[I + i];
+            }
+            PC += 2;
+        }
+        
+        // 
+        public ushort GetSpriteAddress(byte digit)
+        {
+            return (ushort)(digit * 5);
+        }
     }
 }

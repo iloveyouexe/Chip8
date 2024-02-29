@@ -184,6 +184,7 @@ namespace Chip8
                     break;
                 case 0xA1:
                     // SKNP Vx
+                    cpu.SkipIfKeyIsNotPressed(opcode);
                     break;
             }
             break;
@@ -191,31 +192,31 @@ namespace Chip8
             switch (opcode & 0x00FF)
             {
                 case 0x07:
-                    // LD Vx, DT
+                    cpu.SetVxToDelayTimer(opcode);
                     break;
                 case 0x0A:
-                    // LD Vx, K
+                    cpu.SkipIfKeyIsNotPressed(opcode);
                     break;
                 case 0x15:
-                    // LD DT, Vx
+                    cpu.SetDelayTimerToVx(opcode);
                     break;
                 case 0x18:
-                    // LD ST, Vx
+                    cpu.SetSoundTimerToVx(opcode);
                     break;
                 case 0x1E:
-                    // ADD I, Vx
+                    cpu.AddVxToI(opcode);
                     break;
                 case 0x29:
-                    // LD F, Vx
+                    cpu.SetIToSpriteLocationForVx(opcode);
                     break;
                 case 0x33:
-                    // LD B, Vx
+                    cpu.StoreBCDOfVxAtI(opcode);
                     break;
                 case 0x55:
-                    // LD [I], Vx
+                    cpu.StoreV0ToVxInMemoryStartingAtI(opcode);
                     break;
                 case 0x65:
-                    // LD Vx, [I]
+                    cpu.FillV0ToVxWithValuesFromMemoryStartingAtI(opcode);
                     break;
             }
             break;
