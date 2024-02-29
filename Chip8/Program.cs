@@ -178,9 +178,9 @@ namespace Chip8
         case 0xE000:
             switch (opcode & 0x00FF)
             {
-                // next op
                 case 0x9E:
                     // SKP Vx
+                    cpu.SkipIfKeyIsPressed(opcode);
                     break;
                 case 0xA1:
                     // SKNP Vx
