@@ -15,7 +15,23 @@ namespace Chip8
         public byte SP; // stack pointer
         public ushort PC; // program counter
         public static byte[] Display = new byte[64 * 32];
-
+        
+        public void RenderDisplay()
+        {
+            Console.Clear(); // Clear the console to prepare for new frame rendering
+            for (int y = 0; y < 32; y++) // Iterate over each row
+            {
+                for (int x = 0; x < 64; x++) // Iterate over each column in the row
+                {
+                    // Calculate the index in the Display array
+                    int index = x + (y * 64);
+                    // Print '#' for a pixel, or ' ' for no pixel
+                    Console.Write(Display[index] == 1 ? "#" : " ");
+                }
+                Console.WriteLine(); // Move to the next line after finishing a row
+            }
+        }
+        
         public void ClearScreen(ushort opcode)
         {
             for (int i = 0; i < Display.Length; i++) Display[i] = 0;

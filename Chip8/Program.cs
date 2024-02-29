@@ -56,6 +56,7 @@ namespace Chip8
             while (true)
             {
                 ExecuteOpcode(cpu);
+                cpu.RenderDisplay();
             }
         }
 
