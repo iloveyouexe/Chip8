@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Chip8
 {
@@ -15,6 +16,7 @@ namespace Chip8
             Console.WriteLine("2. for Guess");
             Console.WriteLine("3. for an IBM logo, this is going to make a million dollars. ");
             Console.WriteLine("4. for a Maze demo. ");
+            Console.WriteLine("5. for a Space Invaders thing ");
 
             if (int.TryParse(Console.ReadLine(), out var option))
             {
@@ -22,7 +24,6 @@ namespace Chip8
                 {
                     case 1:
                         filePath = @"Roms\Landing.ch8";
-                        ;
                         break;
                     case 2:
                         filePath = @"Roms\Guess";
@@ -33,9 +34,13 @@ namespace Chip8
                     case 4:
                         filePath = @"Roms\Maze.ch8";
                         break;
+                    case 5:
+                        filePath = @"Roms\INVADERS";
+                        break;
                     default:
                         Console.WriteLine("Select an actual option");
                         break;
+                    
                 }
             }
             
@@ -53,10 +58,15 @@ namespace Chip8
             }
             
             cpu.PC = 0x200; // returns to beginning of program
+            
             while (true)
             {
                 ExecuteOpcode(cpu);
-                cpu.RenderDisplay();
+                if (cpu.IsDirty)
+                {
+                 cpu.RenderDisplay();
+                 cpu.IsDirty = false;
+                }
             }
         }
 

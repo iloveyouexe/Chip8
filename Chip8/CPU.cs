@@ -14,10 +14,13 @@ namespace Chip8
         public byte SP; // stack pointer
         public ushort PC; // program counter
         public static byte[] Display = new byte[64 * 32];
+        public bool IsDirty = false;
         
         public void RenderDisplay()
         {
-            Console.Clear(); 
+            // Console.CursorVisible = false;
+            Console.SetCursorPosition(0,0);
+            
             for (int y = 0; y < 32; y++) 
             {
                 for (int x = 0; x < 64; x++) 
@@ -242,14 +245,20 @@ namespace Chip8
                 pixel = RAM[I + yLine];
                 for (int xLine = 0; xLine < 8; xLine++)
                 {
-                    if ((pixel & (0x80 >> xLine)) != 0) 
+                    if ((pixel & (0x80 >> xLine)) != 0)
                     {
-                        int index = (x + xLine + ((y + yLine) * 64)) % (64 * 32); // % modulus do not remove
+                        IsDirty = true;
+                        int index = (x + xLine + ((y + yLine) * 64));
+                        
                         if (Display[index] == 1)
                         {
-                            Registers[0xF] = 1; 
+                            Display[index] = 0;
+                            Registers[0xF] = 1;
                         }
-                        Display[index] ^= 1;
+                        else
+                        {
+                            Display[index] = 1;
+                        }
                     }
                 }
             }
