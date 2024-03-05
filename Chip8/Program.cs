@@ -222,7 +222,6 @@ namespace Chip8
             }
             break;
           }
-        cpu.PC += 2;
         }
     }
 }
