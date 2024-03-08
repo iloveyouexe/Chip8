@@ -53,7 +53,7 @@ namespace Chip8
         public void CallSubroutine(ushort opcode)
         {
             var nnn = (opcode & 0x0FFF);
-            Stack[SP] = PC;
+            PC = Stack[SP];
             SP++;
             PC = (ushort)nnn;
         }
