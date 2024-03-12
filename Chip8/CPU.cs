@@ -18,7 +18,6 @@ namespace Chip8
         
         public void RenderDisplay()
         {
-            // Console.CursorVisible = false;
             Console.SetCursorPosition(0,0);
             
             for (int y = 0; y < 32; y++) 
