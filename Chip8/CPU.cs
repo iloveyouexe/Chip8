@@ -263,8 +263,6 @@ namespace Chip8
             }
         }
         
-        //
-
         public void SkipIfKeyIsPressed(ushort opcode)
         {
             if ((Keyboard & (1 << Registers[(opcode & 0x0F00) >> 8])) != 0)

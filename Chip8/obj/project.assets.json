@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/bmo/.nuget/packages/": {}
+    "C:\\Users\\techh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/bmo/Source/Chip8/Chip8/Chip8.csproj",
+      "projectUniqueName": "D:\\Source\\Chip8\\Chip8\\Chip8.csproj",
       "projectName": "Chip8",
-      "projectPath": "/home/bmo/Source/Chip8/Chip8/Chip8.csproj",
-      "packagesPath": "/home/bmo/.nuget/packages/",
-      "outputPath": "/home/bmo/Source/Chip8/Chip8/obj/",
+      "projectPath": "D:\\Source\\Chip8\\Chip8\\Chip8.csproj",
+      "packagesPath": "C:\\Users\\techh\\.nuget\\packages\\",
+      "outputPath": "D:\\Source\\Chip8\\Chip8\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/bmo/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\techh\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -59,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

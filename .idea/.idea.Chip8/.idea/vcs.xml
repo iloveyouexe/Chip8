@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/../AdventOfCode" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Exercises-For-Programmers" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../Kaos" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../RustroverProjects/rustlings-solutions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../SecturaSYNC" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../TheProvingGrounds" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../chip-8-main/chip-8-main" vcs="Git" />
   </component>
 </project>
