@@ -27,35 +27,34 @@ namespace Chip8
                 for (int x = 0; x < 64; x++) 
                 {
                     int index = x + (y * 64);
-                    displayBuffer.Append(Display[index] == 1 ? "#" : " ");
+                    displayBuffer.Append(Display[index] == 1 ? "#" : ".");
                 }
                 displayBuffer.AppendLine(); 
             }
-    
             Console.Write(displayBuffer.ToString());
         }
         
-        public void ClearScreen(ushort opcode)
+        public void ClearScreen_00E0(ushort opcode)
         {
-            for (int i = 0; i < Display.Length; i++) Display[i] = 0;
+            Display = new byte[64 * 32];
             PC += 2;
             IsDirty = true;
         }
 
-        public void ReturnFromSubroutine(ushort opcode)
+        public void ReturnFromSubroutine_00EE(ushort opcode)
         {
             SP--; 
             PC = Stack[SP]; 
             PC += 2;
         }  
         
-        public void JumpToAddress(ushort opcode)
+        public void JumpToAddress_1NNN(ushort opcode)
         {
             var nnn = (opcode & 0x0FFF);
             PC = (ushort)nnn;
         }
 
-        public void CallSubroutine(ushort opcode)
+        public void CallSubroutine_2NNN(ushort opcode)
         {
             Stack[SP] = PC; 
             SP++; 
@@ -63,7 +62,7 @@ namespace Chip8
             PC = (ushort)nnn; 
         }
 
-        public void SkipIfVxEqualsByte(ushort opcode)
+        public void SkipIfVxEqualsByte_3XKK(ushort opcode)
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
@@ -77,7 +76,7 @@ namespace Chip8
             }
         }
         
-        public void SkipIfVxNotEqualsByte(ushort opcode)
+        public void SkipIfVxNotEqualsByte_4XKK(ushort opcode)
         {
             var nn = (opcode & 0x00FF);
             var x = (opcode & 0x0F00) >> 8;
@@ -91,7 +90,7 @@ namespace Chip8
             }
         }
         
-        public void SkipIfVxEqualsVy(ushort opcode)
+        public void SkipIfVxEqualsVy_5XY0(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -105,7 +104,7 @@ namespace Chip8
             }
         }
 
-        public void SetVxToByte(ushort opcode)
+        public void SetVxToByte_6XKK(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var kk = (byte)(opcode & 0x00FF);
@@ -113,7 +112,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void AddByteToVx(ushort opcode)
+        public void AddByteToVx_7XKK(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var kk = (byte)(opcode & 0x00FF);
@@ -121,7 +120,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void SetVxToVy(ushort opcode)
+        public void SetVxToVy_8XY0(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -129,7 +128,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void SetVxToVxOrVy(ushort opcode)
+        public void SetVxToVxOrVy_8XY1(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -137,7 +136,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void SetVxToVxAndVy(ushort opcode)
+        public void SetVxToVxAndVy_8XY2(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -145,7 +144,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void SetVxToVxXorVy(ushort opcode)
+        public void SetVxToVxXorVy_8XY3(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -153,17 +152,17 @@ namespace Chip8
             PC += 2;
         }
 
-        public void AddVyToVx(ushort opcode)
+        public void AddVyToVx_8XY4(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
-            ushort sum = (ushort)(Registers[x] + Registers[y]); // for overflow
+            ushort sum = (ushort)(Registers[x] + Registers[y]); 
             Registers[0xF] = (byte)(sum > 255 ? 1 : 0); 
             Registers[x] = (byte)(sum & 0xFF); 
             PC += 2;
         }
 
-        public void SubtractVyFromVx(ushort opcode)
+        public void SubtractVyFromVx_8XY5(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -172,7 +171,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void ShiftVxRight(ushort opcode)
+        public void ShiftVxRight_8XY6(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             Registers[0xF] = (byte)(Registers[x] & 0x1);
@@ -180,7 +179,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void SetVxToVyMinusVx(ushort opcode)
+        public void SetVxToVyMinusVx_8XY7(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8; 
             var y = (opcode & 0x00F0) >> 4;
@@ -189,7 +188,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void ShiftVxLeft(ushort opcode)
+        public void ShiftVxLeft_8XYE(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             Registers[0xF] = (byte)((Registers[x] & 0x80) == 0x80 ? 1 : 0); 
@@ -197,7 +196,7 @@ namespace Chip8
             PC += 2; 
         }
 
-        public void SkipIfVxNotEqualsVy(ushort opcode)
+        public void SkipIfVxNotEqualsVy_9XY0(ushort opcode)
         {
             var x = (opcode & 0x0F00) >> 8;
             var y = (opcode & 0x00F0) >> 4;
@@ -211,21 +210,21 @@ namespace Chip8
             }
         }
         
-        public void SetIToAddress(ushort opcode)
+        public void SetIToAddress_ANNN(ushort opcode)
         {
             var address = (ushort)(opcode & 0x0FFF);
             I = address;
             PC += 2;
         }
         
-        public void JumpToAddressPlusV0(ushort opcode)
+        public void JumpToAddressPlusV0_BNNN(ushort opcode)
         {
             var nnn = (ushort)(opcode & 0x0FFF);
             var newAddress = (ushort)(nnn + Registers[0]);
             PC = newAddress;
         }
         
-        public void SetVxToRandomByteAnd(ushort opcode)
+        public void SetVxToRandomByteAnd_CNNN(ushort opcode)
         {
             Random rand = new Random();
             byte randomByte = (byte)rand.Next(0, 256);
@@ -236,7 +235,7 @@ namespace Chip8
             PC += 2;
         }
         
-        public void DrawSprite(ushort opcode)
+        public void DrawSprite_DXYN(ushort opcode)
         {
             var x = Registers[(opcode & 0x0F00) >> 8];
             var y = Registers[(opcode & 0x00F0) >> 4];
@@ -268,7 +267,7 @@ namespace Chip8
         }
 
         
-        public void SkipIfKeyIsPressed(ushort opcode)
+        public void SkipIfKeyIsPressed_EX9E(ushort opcode)
         {
             int keyIndex = Registers[(opcode & 0x0F00) >> 8];
             if ((Keyboard & (1 << keyIndex)) != 0)
@@ -281,7 +280,7 @@ namespace Chip8
             }
         }
 
-        public void SkipIfKeyIsNotPressed(ushort opcode)
+        public void SkipIfKeyIsNotPressed_EXA1(ushort opcode)
         {
             int keyIndex = Registers[(opcode & 0x0F00) >> 8];
             if ((Keyboard & (1 << keyIndex)) == 0)
@@ -294,37 +293,42 @@ namespace Chip8
             }
         }
         
-        public void SetVxToDelayTimer(ushort opcode)
+        public void SetVxToDelayTimer_FX07(ushort opcode)
         {
             Registers[(opcode & 0x0F00) >> 8] = DelayTimer;
             PC += 2;
         }
         
-        public void SetDelayTimerToVx(ushort opcode)
+        public void SetDelayTimerToVx_FX15(ushort opcode)
         {
             DelayTimer = Registers[(opcode & 0x0F00) >> 8];
             PC += 2;
         }
 
-        public void SetSoundTimerToVx(ushort opcode)
+        public void SetSoundTimerToVx_FX18(ushort opcode)
         {
             SoundTimer = Registers[(opcode & 0x0F00) >> 8];
             PC += 2;
         }
 
-        public void AddVxToI(ushort opcode)
+        public void AddVxToI_FX1E(ushort opcode)
         {
             I += Registers[(opcode & 0x0F00) >> 8];
             PC += 2;
         }
 
-        public void SetIToSpriteLocationForVx(ushort opcode)
+        public void SetIToSpriteLocationForVx_FX29(ushort opcode)
         {
             I = GetSpriteAddress(Registers[(opcode & 0x0F00) >> 8]);
             PC += 2;
         }
+        
+        public ushort GetSpriteAddress(byte digit)
+        {
+            return (ushort)(digit * 5);
+        }
 
-        public void StoreBCDOfVxAtI(ushort opcode)
+        public void StoreBCDOfVxAtI_FX33(ushort opcode)
         {
             int value = Registers[(opcode & 0x0F00) >> 8];
             RAM[I] = (byte)(value / 100);
@@ -333,7 +337,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void StoreV0ToVxInMemoryStartingAtI(ushort opcode)
+        public void StoreV0ToVxInMemoryStartingAtI_FX55(ushort opcode)
         {
             for (int i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
             {
@@ -342,7 +346,7 @@ namespace Chip8
             PC += 2;
         }
 
-        public void FillV0ToVxWithValuesFromMemoryStartingAtI(ushort opcode)
+        public void FillV0ToVxWithValuesFromMemoryStartingAtI_FX65(ushort opcode)
         {
             for (int i = 0; i <= ((opcode & 0x0F00) >> 8); ++i)
             {
@@ -351,9 +355,5 @@ namespace Chip8
             PC += 2;
         }
         
-        public ushort GetSpriteAddress(byte digit)
-        {
-            return (ushort)(digit * 5);
-        }
     }
 }

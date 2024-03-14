@@ -65,7 +65,6 @@ namespace Chip8
 
                 if (cpu.IsDirty)
                 {
-                    Console.Clear(); 
                     cpu.RenderDisplay(); 
                     cpu.IsDirty = false; 
                 }
@@ -83,11 +82,11 @@ namespace Chip8
             {
                 case 0x00E0:
                     // CLS
-                    cpu.ClearScreen(opcode);
+                    cpu.ClearScreen_00E0(opcode);
                     break;
                 case 0x00EE:
                     // RET
-                    cpu.ReturnFromSubroutine(opcode);
+                    cpu.ReturnFromSubroutine_00EE(opcode);
                     break;
             }
 
@@ -98,31 +97,31 @@ namespace Chip8
             break;
         case 0x1000:
             // JP addr
-            cpu.JumpToAddress(opcode);
+            cpu.JumpToAddress_1NNN(opcode);
             break;
         case 0x2000:
             // CALL addr
-            cpu.CallSubroutine(opcode);
+            cpu.CallSubroutine_2NNN(opcode);
             break;
         case 0x3000:
             // SE Vx, byte
-            cpu.SkipIfVxEqualsByte(opcode);
+            cpu.SkipIfVxEqualsByte_3XKK(opcode);
             break;
         case 0x4000:
             // SNE Vx, byte
-            cpu.SkipIfVxNotEqualsByte(opcode);
+            cpu.SkipIfVxNotEqualsByte_4XKK(opcode);
             break;
         case 0x5000:
             // SE Vx, Vy
-            cpu.SkipIfVxEqualsVy(opcode);
+            cpu.SkipIfVxEqualsVy_5XY0(opcode);
             break;
         case 0x6000:
             // LD Vx, byte
-            cpu.SetVxToByte(opcode);
+            cpu.SetVxToByte_6XKK(opcode);
             break;
         case 0x7000:
             // ADD Vx, byte
-            cpu.AddByteToVx(opcode);
+            cpu.AddByteToVx_7XKK(opcode);
             break;
         case 0x8000:
             // math.lame
@@ -130,72 +129,72 @@ namespace Chip8
             { 
                 case 0x0: 
                     // LD Vx, Vy
-                    cpu.SetVxToVy(opcode);
+                    cpu.SetVxToVy_8XY0(opcode);
                     break;
                 case 0x1:
                     // OR Vx, Vy
-                    cpu.SetVxToVxOrVy(opcode);
+                    cpu.SetVxToVxOrVy_8XY1(opcode);
                     break;
                 case 0x2:
                     // AND Vx, Vy
-                    cpu.SetVxToVxAndVy(opcode);
+                    cpu.SetVxToVxAndVy_8XY2(opcode);
                     break;
                 case 0x3:
                     // XOR Vx, Vy
-                    cpu.SetVxToVxXorVy(opcode);
+                    cpu.SetVxToVxXorVy_8XY3(opcode);
                     break;
                 case 0x4:
                     // ADD Vx, Vy
-                    cpu.AddVyToVx(opcode);
+                    cpu.AddVyToVx_8XY4(opcode);
                     break;
                 case 0x5:
                     // SUB Vx, Vy
-                    cpu.SubtractVyFromVx(opcode);
+                    cpu.SubtractVyFromVx_8XY5(opcode);
                     break;
                 case 0x6:
                     // SHR Vx {, Vy}
-                    cpu.ShiftVxRight(opcode);
+                    cpu.ShiftVxRight_8XY6(opcode);
                     break;
                 case 0x7:
                     // SUBN Vx, Vy
-                    cpu.SetVxToVyMinusVx(opcode);
+                    cpu.SetVxToVyMinusVx_8XY7(opcode);
                     break;
                 case 0xE:
                     // SHL Vx {, Vy}
-                    cpu.ShiftVxLeft(opcode);
+                    cpu.ShiftVxLeft_8XYE(opcode);
                     break;
             }
             break;
         case 0x9000:
             // SNE Vx, Vy
-            cpu.SkipIfVxNotEqualsVy(opcode);
+            cpu.SkipIfVxNotEqualsVy_9XY0(opcode);
             break;
         case 0xA000:
             // LD I, addr
-            cpu.SetIToAddress(opcode);
+            cpu.SetIToAddress_ANNN(opcode);
             break;
         case 0xB000:
             // JP V0, addr
-            cpu.JumpToAddressPlusV0(opcode);
+            cpu.JumpToAddressPlusV0_BNNN(opcode);
             break;
         case 0xC000:
             // RND Vx, byte
-            cpu.SetVxToRandomByteAnd(opcode);
+            cpu.SetVxToRandomByteAnd_CNNN(opcode);
             break;
         case 0xD000:
             // DRW Vx, Vy, nibble
-            cpu.DrawSprite(opcode);
+            cpu.DrawSprite_DXYN(opcode);
             break;
         case 0xE000:
             switch (opcode & 0x00FF)
             {
                 case 0x9E:
                     // SKP Vx
-                    cpu.SkipIfKeyIsPressed(opcode);
+                    cpu.SkipIfKeyIsPressed_EX9E(opcode);
                     break;
                 case 0xA1:
                     // SKNP Vx
-                    cpu.SkipIfKeyIsNotPressed(opcode);
+                    cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
                     break;
             }
             break;
@@ -203,31 +202,32 @@ namespace Chip8
             switch (opcode & 0x00FF)
             {
                 case 0x07:
-                    cpu.SetVxToDelayTimer(opcode);
+                    cpu.SetVxToDelayTimer_FX07(opcode);
                     break;
-                case 0x0A:
-                    cpu.SkipIfKeyIsNotPressed(opcode);
-                    break;
+                // case 0x0A:
+                // // fix this with Fx0A 
+                //     cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
+                //     break;
                 case 0x15:
-                    cpu.SetDelayTimerToVx(opcode);
+                    cpu.SetDelayTimerToVx_FX15(opcode);
                     break;
                 case 0x18:
-                    cpu.SetSoundTimerToVx(opcode);
+                    cpu.SetSoundTimerToVx_FX18(opcode);
                     break;
                 case 0x1E:
-                    cpu.AddVxToI(opcode);
+                    cpu.AddVxToI_FX1E(opcode);
                     break;
                 case 0x29:
-                    cpu.SetIToSpriteLocationForVx(opcode);
+                    cpu.SetIToSpriteLocationForVx_FX29(opcode);
                     break;
                 case 0x33:
-                    cpu.StoreBCDOfVxAtI(opcode);
+                    cpu.StoreBCDOfVxAtI_FX33(opcode);
                     break;
                 case 0x55:
-                    cpu.StoreV0ToVxInMemoryStartingAtI(opcode);
+                    cpu.StoreV0ToVxInMemoryStartingAtI_FX55(opcode);
                     break;
                 case 0x65:
-                    cpu.FillV0ToVxWithValuesFromMemoryStartingAtI(opcode);
+                    cpu.FillV0ToVxWithValuesFromMemoryStartingAtI_FX65(opcode);
                     break;
             }
             break;
