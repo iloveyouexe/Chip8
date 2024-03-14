@@ -45,7 +45,7 @@ namespace Chip8
             }
             
             var cpu = new CPU();
-            cpu.PC = 0x200; // start loading stuff into ram
+            cpu.PC = 0x200; 
             
             
             using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
@@ -57,20 +57,21 @@ namespace Chip8
                 }
             }
             
-            cpu.PC = 0x200; // returns to beginning of program
+            cpu.PC = 0x200;
             
             while (true)
             {
                 ExecuteOpcode(cpu);
+
                 if (cpu.IsDirty)
                 {
-                 cpu.RenderDisplay();
-                 cpu.IsDirty = false;
+                    Console.Clear(); 
+                    cpu.RenderDisplay(); 
+                    cpu.IsDirty = false; 
                 }
+                Thread.Sleep(1000 / 60); 
             }
         }
-
-        //http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
        static void ExecuteOpcode(CPU cpu)
         {
@@ -88,7 +89,6 @@ namespace Chip8
                     // RET
                     cpu.ReturnFromSubroutine(opcode);
                     break;
-                // Add other specific opcodes here if necessary
             }
 
     switch (opcode & 0xF000)

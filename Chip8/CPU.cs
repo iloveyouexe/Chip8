@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Chip8
 {
@@ -18,31 +19,35 @@ namespace Chip8
         
         public void RenderDisplay()
         {
-            Console.SetCursorPosition(0,0);
-            
+            StringBuilder displayBuffer = new StringBuilder();
+            Console.SetCursorPosition(0, 0);
+    
             for (int y = 0; y < 32; y++) 
             {
                 for (int x = 0; x < 64; x++) 
                 {
                     int index = x + (y * 64);
-                    Console.Write(Display[index] == 1 ? "#" : " ");
+                    displayBuffer.Append(Display[index] == 1 ? "#" : " ");
                 }
-                Console.WriteLine(); 
+                displayBuffer.AppendLine(); 
             }
+    
+            Console.Write(displayBuffer.ToString());
         }
         
         public void ClearScreen(ushort opcode)
         {
             for (int i = 0; i < Display.Length; i++) Display[i] = 0;
             PC += 2;
+            IsDirty = true;
         }
 
         public void ReturnFromSubroutine(ushort opcode)
         {
-            SP--;
-            Stack[SP] = PC;
+            SP--; 
+            PC = Stack[SP]; 
             PC += 2;
-        }     
+        }  
         
         public void JumpToAddress(ushort opcode)
         {
@@ -52,10 +57,10 @@ namespace Chip8
 
         public void CallSubroutine(ushort opcode)
         {
-            var nnn = (opcode & 0x0FFF);
-            PC = Stack[SP];
-            SP++;
-            PC = (ushort)nnn;
+            Stack[SP] = PC; 
+            SP++; 
+            var nnn = (opcode & 0x0FFF); 
+            PC = (ushort)nnn; 
         }
 
         public void SkipIfVxEqualsByte(ushort opcode)
@@ -179,8 +184,8 @@ namespace Chip8
         {
             var x = (opcode & 0x0F00) >> 8; 
             var y = (opcode & 0x00F0) >> 4;
-            Registers[0xF] = (byte)(Registers[y] > Registers[x] ? 1 : 0);
-            Registers[y] -= Registers[x];
+            Registers[0xF] = (byte)(Registers[y] >= Registers[x] ? 1 : 0);  
+            Registers[x] = (byte)(Registers[y] - Registers[x]);
             PC += 2;
         }
         
@@ -238,7 +243,7 @@ namespace Chip8
             ushort height = (ushort)(opcode & 0x000F);
             ushort pixel;
 
-            Registers[0xF] = 0;  // Assume no collision to start with
+            Registers[0xF] = 0;
 
             for (int yLine = 0; yLine < height; yLine++)
             {
@@ -247,26 +252,26 @@ namespace Chip8
                 {
                     if ((pixel & (0x80 >> xLine)) != 0)
                     {
-                        IsDirty = true;
-                        int index = (x + xLine + ((y + yLine) * 64));
-                        
+                        int xCoord = (x + xLine) % 64; 
+                        int yCoord = (y + yLine) % 32; 
+                        int index = xCoord + (yCoord * 64);
+
                         if (Display[index] == 1)
                         {
-                            Display[index] = 0;
-                            Registers[0xF] = 1;
+                            Registers[0xF] = 1; 
                         }
-                        else
-                        {
-                            Display[index] = 1;
-                        }
+                        Display[index] ^= 1; 
+                        IsDirty = true;
                     }
                 }
             }
         }
+
         
         public void SkipIfKeyIsPressed(ushort opcode)
         {
-            if ((Keyboard & (1 << Registers[(opcode & 0x0F00) >> 8])) != 0)
+            int keyIndex = Registers[(opcode & 0x0F00) >> 8];
+            if ((Keyboard & (1 << keyIndex)) != 0)
             {
                 PC += 4;
             }
@@ -278,7 +283,8 @@ namespace Chip8
 
         public void SkipIfKeyIsNotPressed(ushort opcode)
         {
-            if ((Keyboard & (1 << Registers[(opcode & 0x0F00) >> 8])) == 0)
+            int keyIndex = Registers[(opcode & 0x0F00) >> 8];
+            if ((Keyboard & (1 << keyIndex)) == 0)
             {
                 PC += 4;
             }
