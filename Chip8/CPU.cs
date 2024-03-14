@@ -42,7 +42,8 @@ namespace Chip8
             SP--;
             Stack[SP] = PC;
             PC += 2;
-        }        
+        }     
+        
         public void JumpToAddress(ushort opcode)
         {
             var nnn = (opcode & 0x0FFF);
