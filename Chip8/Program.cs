@@ -40,14 +40,14 @@ namespace Chip8
                     default:
                         Console.WriteLine("Select an actual option");
                         break;
-
+                    
                 }
             }
-
+            
             var cpu = new CPU();
-            cpu.PC = 0x200;
-
-
+            cpu.PC = 0x200; 
+            
+            
             using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
             {
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
@@ -56,24 +56,23 @@ namespace Chip8
                     cpu.PC++;
                 }
             }
-
+            
             cpu.PC = 0x200;
-
+            
             while (true)
             {
                 ExecuteOpcode(cpu);
 
                 if (cpu.IsDirty)
                 {
-                    cpu.RenderDisplay();
-                    cpu.IsDirty = false;
+                    cpu.RenderDisplay(); 
+                    cpu.IsDirty = false; 
                 }
-
-                Thread.Sleep(1000 / 60);
+                Thread.Sleep(1000 / 60); 
             }
         }
 
-        static void ExecuteOpcode(CPU cpu)
+       static void ExecuteOpcode(CPU cpu)
         {
             var highByte = cpu.RAM[cpu.PC];
             var lowByte = cpu.RAM[cpu.PC + 1];
@@ -91,151 +90,148 @@ namespace Chip8
                     break;
             }
 
-            switch (opcode & 0xF000)
-            {
-                case 0x0000:
-                    // System
+    switch (opcode & 0xF000)
+    {
+        case 0x0000:
+            // System
+            break;
+        case 0x1000:
+            // JP addr
+            cpu.JumpToAddress_1NNN(opcode);
+            break;
+        case 0x2000:
+            // CALL addr
+            cpu.CallSubroutine_2NNN(opcode);
+            break;
+        case 0x3000:
+            // SE Vx, byte
+            cpu.SkipIfVxEqualsByte_3XKK(opcode);
+            break;
+        case 0x4000:
+            // SNE Vx, byte
+            cpu.SkipIfVxNotEqualsByte_4XKK(opcode);
+            break;
+        case 0x5000:
+            // SE Vx, Vy
+            cpu.SkipIfVxEqualsVy_5XY0(opcode);
+            break;
+        case 0x6000:
+            // LD Vx, byte
+            cpu.SetVxToByte_6XKK(opcode);
+            break;
+        case 0x7000:
+            // ADD Vx, byte
+            cpu.AddByteToVx_7XKK(opcode);
+            break;
+        case 0x8000:
+            // math.lame
+            switch (opcode & 0x000F)
+            { 
+                case 0x0: 
+                    // LD Vx, Vy
+                    cpu.SetVxToVy_8XY0(opcode);
                     break;
-                case 0x1000:
-                    // JP addr
-                    cpu.JumpToAddress_1NNN(opcode);
+                case 0x1:
+                    // OR Vx, Vy
+                    cpu.SetVxToVxOrVy_8XY1(opcode);
                     break;
-                case 0x2000:
-                    // CALL addr
-                    cpu.CallSubroutine_2NNN(opcode);
+                case 0x2:
+                    // AND Vx, Vy
+                    cpu.SetVxToVxAndVy_8XY2(opcode);
                     break;
-                case 0x3000:
-                    // SE Vx, byte
-                    cpu.SkipIfVxEqualsByte_3XKK(opcode);
+                case 0x3:
+                    // XOR Vx, Vy
+                    cpu.SetVxToVxXorVy_8XY3(opcode);
                     break;
-                case 0x4000:
-                    // SNE Vx, byte
-                    cpu.SkipIfVxNotEqualsByte_4XKK(opcode);
+                case 0x4:
+                    // ADD Vx, Vy
+                    cpu.AddVyToVx_8XY4(opcode);
                     break;
-                case 0x5000:
-                    // SE Vx, Vy
-                    cpu.SkipIfVxEqualsVy_5XY0(opcode);
+                case 0x5:
+                    // SUB Vx, Vy
+                    cpu.SubtractVyFromVx_8XY5(opcode);
                     break;
-                case 0x6000:
-                    // LD Vx, byte
-                    cpu.SetVxToByte_6XKK(opcode);
+                case 0x6:
+                    // SHR Vx {, Vy}
+                    cpu.ShiftVxRight_8XY6(opcode);
                     break;
-                case 0x7000:
-                    // ADD Vx, byte
-                    cpu.AddByteToVx_7XKK(opcode);
+                case 0x7:
+                    // SUBN Vx, Vy
+                    cpu.SetVxToVyMinusVx_8XY7(opcode);
                     break;
-                case 0x8000:
-                    // math.lame
-                    switch (opcode & 0x000F)
-                    {
-                        case 0x0:
-                            // LD Vx, Vy
-                            cpu.SetVxToVy_8XY0(opcode);
-                            break;
-                        case 0x1:
-                            // OR Vx, Vy
-                            cpu.SetVxToVxOrVy_8XY1(opcode);
-                            break;
-                        case 0x2:
-                            // AND Vx, Vy
-                            cpu.SetVxToVxAndVy_8XY2(opcode);
-                            break;
-                        case 0x3:
-                            // XOR Vx, Vy
-                            cpu.SetVxToVxXorVy_8XY3(opcode);
-                            break;
-                        case 0x4:
-                            // ADD Vx, Vy
-                            cpu.AddVyToVx_8XY4(opcode);
-                            break;
-                        case 0x5:
-                            // SUB Vx, Vy
-                            cpu.SubtractVyFromVx_8XY5(opcode);
-                            break;
-                        case 0x6:
-                            // SHR Vx {, Vy}
-                            cpu.ShiftVxRight_8XY6(opcode);
-                            break;
-                        case 0x7:
-                            // SUBN Vx, Vy
-                            cpu.SetVxToVyMinusVx_8XY7(opcode);
-                            break;
-                        case 0xE:
-                            // SHL Vx {, Vy}
-                            cpu.ShiftVxLeft_8XYE(opcode);
-                            break;
-                    }
-
-                    break;
-                case 0x9000:
-                    // SNE Vx, Vy
-                    cpu.SkipIfVxNotEqualsVy_9XY0(opcode);
-                    break;
-                case 0xA000:
-                    // LD I, addr
-                    cpu.SetIToAddress_ANNN(opcode);
-                    break;
-                case 0xB000:
-                    // JP V0, addr
-                    cpu.JumpToAddressPlusV0_BNNN(opcode);
-                    break;
-                case 0xC000:
-                    // RND Vx, byte
-                    cpu.SetVxToRandomByteAnd_CNNN(opcode);
-                    break;
-                case 0xD000:
-                    // DRW Vx, Vy, nibble
-                    cpu.DrawSprite_DXYN(opcode);
-                    break;
-                case 0xE000:
-                    switch (opcode & 0x00FF)
-                    {
-                        case 0x9E:
-                            // SKP Vx
-                            cpu.SkipIfKeyIsPressed_EX9E(opcode);
-                            break;
-                        case 0xA1:
-                            // SKNP Vx
-                            cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
-                            break;
-                    }
-
-                    break;
-                case 0xF000:
-                    switch (opcode & 0x00FF)
-                    {
-                        case 0x07:
-                            cpu.SetVxToDelayTimer_FX07(opcode);
-                            break;
-                        // case 0x0A:
-                        // // fix this with Fx0A 
-                        //     cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
-                        //     break;
-                        case 0x15:
-                            cpu.SetDelayTimerToVx_FX15(opcode);
-                            break;
-                        case 0x18:
-                            cpu.SetSoundTimerToVx_FX18(opcode);
-                            break;
-                        case 0x1E:
-                            cpu.AddVxToI_FX1E(opcode);
-                            break;
-                        case 0x29:
-                            cpu.SetIToSpriteLocationForVx_FX29(opcode);
-                            break;
-                        case 0x33:
-                            cpu.StoreBCDOfVxAtI_FX33(opcode);
-                            break;
-                        case 0x55:
-                            cpu.StoreV0ToVxInMemoryStartingAtI_FX55(opcode);
-                            break;
-                        case 0x65:
-                            cpu.FillV0ToVxWithValuesFromMemoryStartingAtI_FX65(opcode);
-                            break;
-                    }
-
+                case 0xE:
+                    // SHL Vx {, Vy}
+                    cpu.ShiftVxLeft_8XYE(opcode);
                     break;
             }
+            break;
+        case 0x9000:
+            // SNE Vx, Vy
+            cpu.SkipIfVxNotEqualsVy_9XY0(opcode);
+            break;
+        case 0xA000:
+            // LD I, addr
+            cpu.SetIToAddress_ANNN(opcode);
+            break;
+        case 0xB000:
+            // JP V0, addr
+            cpu.JumpToAddressPlusV0_BNNN(opcode);
+            break;
+        case 0xC000:
+            // RND Vx, byte
+            cpu.SetVxToRandomByteAnd_CNNN(opcode);
+            break;
+        case 0xD000:
+            // DRW Vx, Vy, nibble
+            cpu.DrawSprite_DXYN(opcode);
+            break;
+        case 0xE000:
+            switch (opcode & 0x00FF)
+            {
+                case 0x9E:
+                    // SKP Vx
+                    cpu.SkipIfKeyIsPressed_EX9E(opcode);
+                    break;
+                case 0xA1:
+                    // SKNP Vx
+                    cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
+                    break;
+            }
+            break;
+        case 0xF000:
+            switch (opcode & 0x00FF)
+            {
+                case 0x07:
+                    cpu.SetVxToDelayTimer_FX07(opcode);
+                    break;
+                // case 0x0A:
+                // // fix this with Fx0A 
+                //     cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
+                //     break;
+                case 0x15:
+                    cpu.SetDelayTimerToVx_FX15(opcode);
+                    break;
+                case 0x18:
+                    cpu.SetSoundTimerToVx_FX18(opcode);
+                    break;
+                case 0x1E:
+                    cpu.AddVxToI_FX1E(opcode);
+                    break;
+                case 0x29:
+                    cpu.SetIToSpriteLocationForVx_FX29(opcode);
+                    break;
+                case 0x33:
+                    cpu.StoreBCDOfVxAtI_FX33(opcode);
+                    break;
+                case 0x55:
+                    cpu.StoreV0ToVxInMemoryStartingAtI_FX55(opcode);
+                    break;
+                case 0x65:
+                    cpu.FillV0ToVxWithValuesFromMemoryStartingAtI_FX65(opcode);
+                    break;
+            }
+            break;
+          }
         }
     }
 }
