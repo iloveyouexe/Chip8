@@ -217,6 +217,7 @@ namespace Chip8
                 case 0x1E:
                     cpu.AddVxToI_FX1E(opcode);
                     break;
+                
                 case 0x29:
                     cpu.SetIToSpriteLocationForVx_FX29(opcode);
                     break;
@@ -231,6 +232,7 @@ namespace Chip8
                 case 0x65:
                     cpu.FillV0ToVxWithValuesFromMemoryStartingAtI_FX65(opcode);
                     break;
+                
             }
             break;
           }
