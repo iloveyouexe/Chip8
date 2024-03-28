@@ -204,10 +204,9 @@ namespace Chip8
                 case 0x07:
                     cpu.SetVxToDelayTimer_FX07(opcode);
                     break;
-                // case 0x0A:
-                // // fix this with Fx0A 
-                //     cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
-                //     break;
+                case 0x0A:
+                    cpu.StoreKeyPressValueToVx_FX0A(opcode);
+                    break;
                 case 0x15:
                     cpu.SetDelayTimerToVx_FX15(opcode);
                     break;

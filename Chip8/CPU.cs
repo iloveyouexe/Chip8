@@ -298,6 +298,27 @@ namespace Chip8
             Registers[(opcode & 0x0F00) >> 8] = DelayTimer;
             PC += 2;
         }
+
+        public void StoreKeyPressValueToVx_FX0A(ushort opcode)
+        {
+            var x = (opcode & 0x0F00) >> 8;
+
+            bool keyPressDetected = false;
+            for (int i = 0; i < 16; ++i)
+            {
+                if ((Keyboard & (1 << i)) != 0)
+                {
+                    Registers[x] = (byte)i;  
+                    keyPressDetected = true;
+                    break;  
+                }
+            }
+            if (!keyPressDetected)
+            {
+                return;
+            }
+            PC += 2; 
+        }
         
         public void SetDelayTimerToVx_FX15(ushort opcode)
         {
