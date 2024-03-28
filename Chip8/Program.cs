@@ -222,7 +222,7 @@ namespace Chip8
                     break;
                 case 0x33:
                     cpu.StoreBCDOfVxAtI_FX33(opcode);
-                    break
+                    break;
                 case 0x55:
                     cpu.StoreV0ToVxInMemoryStartingAtI_FX55(opcode);
                     break;
