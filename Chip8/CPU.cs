@@ -16,6 +16,7 @@ namespace Chip8
         public ushort PC; // program counter
         public static byte[] Display = new byte[64 * 32];
         public bool IsDirty = false;
+        private Random random = new Random();
         
         public void RenderDisplay()
         {
@@ -44,8 +45,7 @@ namespace Chip8
         public void ReturnFromSubroutine_00EE(ushort opcode)
         {
             SP--; 
-            PC = Stack[SP]; 
-            PC += 2;
+            PC = Stack[SP];
         }  
         
         public void JumpToAddress_1NNN(ushort opcode)
@@ -226,10 +226,9 @@ namespace Chip8
         
         public void SetVxToRandomByteAnd_CNNN(ushort opcode)
         {
-            Random rand = new Random();
-            byte randomByte = (byte)rand.Next(0, 256);
+            byte randomByte = (byte)random.Next(0, 256); 
             var kk = (byte)(opcode & 0x00FF);
-            var x = (ushort)(opcode & 0x0F00) >> 8;
+            var x = (ushort)((opcode & 0x0F00) >> 8);
 
             Registers[x] = (byte)(randomByte & kk);
             PC += 2;
@@ -265,7 +264,6 @@ namespace Chip8
                 }
             }
         }
-
         
         public void SkipIfKeyIsPressed_EX9E(ushort opcode)
         {
@@ -376,5 +374,11 @@ namespace Chip8
             PC += 2;
         }
         
+        public void HandleUnrecognizedOpcode(CPU cpu, ushort opcode)
+        {
+            Console.WriteLine($"Unrecognized opcode {opcode:X4} at PC: {cpu.PC:X4}");
+            // Environment.Exit(1);
+            cpu.PC += 2;
+        }
     }
 }
