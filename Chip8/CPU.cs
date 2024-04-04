@@ -14,7 +14,7 @@ namespace Chip8
         public ushort[] Stack = new ushort[24];
         public byte SP; // stack pointer
         public ushort PC; // program counter
-        public static byte[] Display = new byte[64 * 32];
+        public byte[] Display = new byte[64 * 32];
         public bool IsDirty = false;
         private Random random = new Random();
         
