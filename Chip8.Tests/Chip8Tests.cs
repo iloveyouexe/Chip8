@@ -228,6 +228,118 @@ namespace Chip8.Tests
             Assert.Equal(cpu.Registers[0xB], cpu.Registers[0xA]); 
             Assert.Equal(0x202, cpu.PC); 
         }
+        
+        [Fact]
+        public void SetVxToVxOrVy_8XY1_PerformsBitwiseOrAndStoresInVx()
+        {
+            // Arrange
+            ushort opcode = 0x8AB1; 
+            cpu.Registers[0xA] = 0x0C; 
+            cpu.Registers[0xB] = 0x03; 
 
+            byte expectedValue = 0x0C | 0x03; 
+
+            // Act
+            cpu.SetVxToVxOrVy_8XY1(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(0x202, cpu.PC); 
+        }
+    
+        [Fact]
+        public void SetVxToVxAndVy_8XY2_PerformsBitwiseAndAndStoresInVx()
+        {
+            // Arrange
+            ushort opcode = 0x8AB2; 
+            cpu.Registers[0xA] = 0x0F; 
+            cpu.Registers[0xB] = 0x03;
+
+            byte expectedValue = 0x0F & 0x03; 
+
+            // Act
+            cpu.SetVxToVxAndVy_8XY2(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(0x202, cpu.PC); 
+        }
+        
+        [Fact]
+        public void SetVxToVxXorVy_8XY3_PerformsBitwiseXorAndStoresInVx()
+        {
+            // Arrange
+            ushort opcode = 0x8AB3; 
+            cpu.Registers[0xA] = 0x0C; 
+            cpu.Registers[0xB] = 0x0F; 
+
+            byte expectedValue = 0x0C ^ 0x0F; 
+
+            // Act
+            cpu.SetVxToVxXorVy_8XY3(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(0x202, cpu.PC);
+        }
+
+        [Fact]
+        public void AddVyToVx_8XY4_HandlesOverflowCorrectly()
+        {
+            // Arrange
+            ushort opcode = 0x8AB4; 
+            cpu.Registers[0xA] = 0xFF; 
+            cpu.Registers[0xB] = 0x02;
+
+            byte expectedValue = (0xFF + 0x02) & 0xFF; 
+
+            // Act
+            cpu.AddVyToVx_8XY4(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(1, cpu.Registers[0xF]); 
+            Assert.Equal(0x202, cpu.PC);
+        }
+        
+        [Fact]
+        public void SubtractVyFromVx_8XY5_SubtractsCorrectlyWithoutBorrow()
+        {
+            // Arrange
+            ushort opcode = 0x8AB5;
+            cpu.Registers[0xA] = 0x20;
+            cpu.Registers[0xB] = 0x10; // avoid borrow
+
+            byte expectedValue = 0x20 - 0x10; // without borrow
+
+            // Act
+            cpu.SubtractVyFromVx_8XY5(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(1, cpu.Registers[0xF]); // 1 (no borrow)
+            Assert.Equal(0x202, cpu.PC); 
+        }
+
+        [Fact]
+        public void SubtractVyFromVx_8XY5_HandlesBorrowCorrectly()
+        {
+            // Arrange
+            ushort opcode = 0x8AB5;
+            cpu.Registers[0xA] = 0x10;
+            cpu.Registers[0xB] = 0x20; // cause borrow
+
+            byte expectedValue = unchecked((byte)(0x10 - 0x20)); // with borrow
+
+            // Act
+            cpu.SubtractVyFromVx_8XY5(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]);
+            Assert.Equal(0, cpu.Registers[0xF]); // 0 (borrow occurred)
+            Assert.Equal(0x202, cpu.PC);
+        }
+        
+        
     }
 }
