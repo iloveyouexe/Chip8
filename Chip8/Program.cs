@@ -12,29 +12,21 @@ namespace Chip8
             string? filePath = "";
 
             Console.WriteLine("Pick which ROM you'd like to load from the list available below. ");
-            Console.WriteLine("1. for Landing");
-            Console.WriteLine("2. for Guess");
-            Console.WriteLine("3. for an IBM logo, this is going to make a million dollars. ");
-            Console.WriteLine("4. for a Maze demo. ");
-            Console.WriteLine("5. for a Space Invaders thing ");
+            Console.WriteLine("1. for an IBM logo, this is going to make a million dollars. ");
+            Console.WriteLine("2. for a Maze demo. ");
+            Console.WriteLine("3. for a Space Invaders thing ");
 
             if (int.TryParse(Console.ReadLine(), out var option))
             {
                 switch (option)
                 {
                     case 1:
-                        filePath = @"Roms\Landing.ch8";
-                        break;
-                    case 2:
-                        filePath = @"Roms\Guess";
-                        break;
-                    case 3:
                         filePath = @"Roms\IBMLogo.ch8";
                         break;
-                    case 4:
+                    case 2:
                         filePath = @"Roms\Maze.ch8";
                         break;
-                    case 5:
+                    case 3:
                         filePath = @"Roms\INVADERS";
                         break;
                     default:
