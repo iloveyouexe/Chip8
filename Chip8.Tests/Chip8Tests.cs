@@ -339,7 +339,5 @@ namespace Chip8.Tests
             Assert.Equal(0, cpu.Registers[0xF]); // 0 (borrow occurred)
             Assert.Equal(0x202, cpu.PC);
         }
-        
-        
     }
 }
