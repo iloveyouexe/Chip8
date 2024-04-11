@@ -339,5 +339,97 @@ namespace Chip8.Tests
             Assert.Equal(0, cpu.Registers[0xF]); // 0 (borrow occurred)
             Assert.Equal(0x202, cpu.PC);
         }
+        
+        [Fact]
+        public void ShiftVxRight_8XY6_ShiftsVxRightAndSetsVF()
+        {
+            // Arrange
+            ushort opcode = 0x8A06; 
+            cpu.Registers[0xA] = 0x0B; 
+
+            byte expectedValue = 0x0B >> 1; 
+            byte expectedVF = 0x0B & 0x1;  
+
+            // Act
+            cpu.ShiftVxRight_8XY6(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(expectedVF, cpu.Registers[0xF]);    
+            Assert.Equal(0x202, cpu.PC);                    
+        }
+
+        [Fact]
+        public void SetVxToVyMinusVx_8XY7_SubtractsVyFromVxCorrectlyWithoutBorrow()
+        {
+            // Arrange
+            ushort opcode = 0x8AB7; 
+            cpu.Registers[0xA] = 0x10;
+            cpu.Registers[0xB] = 0x20; // avoid borrow
+
+            byte expectedValue = (byte)(cpu.Registers[0xB] - cpu.Registers[0xA]); 
+
+            // Act
+            cpu.SetVxToVyMinusVx_8XY7(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(1, cpu.Registers[0xF]); // 1 (no borrow)
+            Assert.Equal(0x202, cpu.PC); 
+        }
+
+        [Fact]
+        public void SetVxToVyMinusVx_8XY7_HandlesBorrowCorrectly()
+        {
+            // Arrange
+            ushort opcode = 0x8AB7; 
+            cpu.Registers[0xA] = 0x30; 
+            cpu.Registers[0xB] = 0x10; // cause borrow
+
+            byte expectedValue = (byte)(cpu.Registers[0xB] - cpu.Registers[0xA]); 
+
+            // Act
+            cpu.SetVxToVyMinusVx_8XY7(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(0, cpu.Registers[0xF]); // 0 (borrow occurred)
+            Assert.Equal(0x202, cpu.PC); 
+        }
+
+        [Fact]
+        public void ShiftVxLeft_8XYE_ShiftsVxLeftAndSetsVF()
+        {
+            // Arrange
+            ushort opcode = 0x8ABE; 
+            cpu.Registers[0xA] = 0x85; 
+
+            byte expectedValue = 0x0A; 
+            byte expectedVF = 1; 
+
+            // Act
+            cpu.ShiftVxLeft_8XYE(opcode);
+
+            // Assert
+            Assert.Equal(expectedValue, cpu.Registers[0xA]); 
+            Assert.Equal(expectedVF, cpu.Registers[0xF]);    
+            Assert.Equal(0x202, cpu.PC);                    
+        }
+        
+        [Fact]
+        public void SkipIfVxNotEqualsVy_9XY0_SkipsNextInstructionWhenNotEqual()
+        {
+            // Arrange
+            ushort opcode = 0x9AB0; 
+            cpu.Registers[0xA] = 0x01; 
+            cpu.Registers[0xB] = 0x02; 
+
+            // Act
+            cpu.SkipIfVxNotEqualsVy_9XY0(opcode);
+
+            // Assert
+            Assert.Equal(0x204, cpu.PC); // 4 when not equal
+        }
+        
     }
 }
