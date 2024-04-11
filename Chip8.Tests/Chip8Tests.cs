@@ -431,5 +431,121 @@ namespace Chip8.Tests
             Assert.Equal(0x204, cpu.PC); // 4 when not equal
         }
         
+        [Fact]
+        public void SetAddressToI_ANNN_SetsIToNNN()
+        {
+            // Arrange
+            ushort opcode = 0xA123; 
+            
+            // Act
+            cpu.SetIToAddress_ANNN(opcode); 
+
+            // Assert
+            Assert.Equal(0x123, cpu.I); 
+            Assert.Equal(0x202, cpu.PC); 
+        }
+
+        [Fact]
+        public void JumpToAddressPlusV0_Bnnn_SetsPCToNNNPlusV0()
+        {
+            // Arrange
+            ushort opcode = 0xB123;
+            cpu.Registers[0] = 0x05;
+            ushort expectedAddress = (ushort)(0x123 + cpu.Registers[0]); // Cast result to ushort
+
+            // Act
+            cpu.JumpToAddressPlusV0_BNNN(opcode);
+
+            // Assert
+            Assert.Equal(expectedAddress, cpu.PC);
+        }
+
+        [Fact]
+        public void SetVxToRandomByteAnd_CNNN_SetsRegisterWithinRangeAndIncrementsPC()
+        {
+            // Arrange
+            ushort opcode = 0xC0FF; 
+            ushort initialPC = cpu.PC;
+
+            // Act
+            cpu.SetVxToRandomByteAnd_CNNN(opcode);
+
+            // Assert
+            byte registerValue = cpu.Registers[0];
+            Assert.InRange(registerValue, byte.MinValue, byte.MaxValue); 
+
+            Assert.Equal(initialPC + 2, cpu.PC); 
+        }
+
+        [Fact]
+        public void DrawSprite_DXYN_UpdatesDisplayAndSetsCollisionFlagIfNecessary()
+        {
+            // Arrange
+            cpu.Registers[0] = 0; // x position
+            cpu.Registers[1] = 0; // y position
+            cpu.I = 0x200; // Starting address of the sprite in RAM
+
+            // 8x2 masterpeice
+            // first row is all 1s, second row is alternating 1s and 0s
+            cpu.RAM[0x200] = 0xFF; 
+            cpu.RAM[0x201] = 0xAA; 
+
+            ushort opcode = 0xD012; // X=0,
+                                    // Y=1,
+                                    // N=2 (draw 2-byte sprite from I at position V0,V1)
+
+            // Act
+            cpu.DrawSprite_DXYN(opcode);
+
+            // Assert
+            // row 1 (0xFF)
+            for (int i = 0; i < 8; i++)
+            {
+                Assert.Equal(1, cpu.Display[i]); // Each pixel in the first row should be set
+            }
+
+            // row 2 (0xAA)
+            for (int i = 64; i < 72; i++) 
+            {
+                int expected = (i % 2 == 0) ? 1 : 0; // Expect 1 on even indices, 0 on odd
+                Assert.Equal(expected, cpu.Display[i]);
+            }
+            
+            Assert.Equal(0, cpu.Registers[0xF]);
+            Assert.True(cpu.IsDirty);
+        }
+
+        [Fact]
+        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy2IfKeyPressed()
+        {
+            // Arrange
+            ushort opcode = 0xE09E; 
+            cpu.Registers[0] = 0xA; 
+            cpu.Keyboard = (byte)(1 << cpu.Registers[0]); // pressing key here
+            ushort initialPC = cpu.PC;
+
+            // Act
+            cpu.SkipIfKeyIsPressed_EX9E(opcode);
+
+            // Assert
+            Assert.Equal(initialPC + 2, cpu.PC); 
+        }
+
+        [Fact]
+        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy4IfKeyNotPressed()
+        {
+            // Arrange
+            ushort opcode = 0xE09E; 
+            cpu.Registers[0] = 0xA; 
+            cpu.Keyboard = 0x0; // no key is pressed here
+            ushort initialPC = cpu.PC;
+
+            // Act
+            cpu.SkipIfKeyIsPressed_EX9E(opcode);
+
+            // Assert
+            Assert.Equal(initialPC + 4, cpu.PC); 
+        }
+        
     }
 }

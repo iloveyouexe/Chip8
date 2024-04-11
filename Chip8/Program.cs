@@ -35,14 +35,24 @@ namespace Chip8
                 }
             }
             var cpu = new CPU();
-            using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+
+            try
             {
-                int startAddress = 0x200;
-                while (reader.BaseStream.Position < reader.BaseStream.Length)
+                using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
                 {
-                    cpu.RAM[startAddress++] = reader.ReadByte();
+                    int startAddress = 0x200;
+                    while (reader.BaseStream.Position < reader.BaseStream.Length)
+                    {
+                        cpu.RAM[startAddress++] = reader.ReadByte();
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             cpu.PC = 0x200; 
             
             while (true)
