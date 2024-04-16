@@ -9,7 +9,7 @@ namespace Chip8
         public byte[] Registers = new byte[16]; // V[0x0] => V[0xF} hexidecimal 0-16
         public byte DelayTimer;
         public byte SoundTimer;
-        public byte Keyboard;
+        public ushort Keyboard;
         public ushort I = 0;
         public ushort[] Stack = new ushort[24];
         public byte SP; // stack pointer
@@ -267,29 +267,31 @@ namespace Chip8
         
         public void SkipIfKeyIsPressed_EX9E(ushort opcode)
         {
-            int keyIndex = Registers[(opcode & 0x0F00) >> 8];
-            if ((Keyboard & (1 << keyIndex)) != 0)
+            int registerIndex = (opcode & 0x0F00) >> 8;
+            if ((Keyboard & (1 << Registers[registerIndex])) != 0)
             {
                 PC += 4;
             }
             else
             {
                 PC += 2;
+            }
+        }
+        
+        public void SkipIfKeyIsNotPressed_EXA1(ushort opcode)
+        {
+            int registerIndex = (opcode & 0x0F00) >> 8;
+            if ((Keyboard & (1 << Registers[registerIndex])) == 0)
+            {
+                PC += 4; 
+            }
+            else
+            {
+                PC += 2; 
             }
         }
 
-        public void SkipIfKeyIsNotPressed_EXA1(ushort opcode)
-        {
-            int keyIndex = Registers[(opcode & 0x0F00) >> 8];
-            if ((Keyboard & (1 << keyIndex)) == 0)
-            {
-                PC += 4;
-            }
-            else
-            {
-                PC += 2;
-            }
-        }
+
         
         public void SetVxToDelayTimer_FX07(ushort opcode)
         {
@@ -380,5 +382,20 @@ namespace Chip8
             // Environment.Exit(1);
             cpu.PC += 2;
         }
+        
+        public void Initialize()
+        {
+            RAM = new byte[4096];
+            Registers = new byte[16];
+            Display = new byte[64 * 32];
+            PC = 0x200; 
+            SP = 0;
+            I = 0;
+            Keyboard = 0;
+            DelayTimer = 0;
+            SoundTimer = 0;
+            IsDirty = true; 
+        }
+        
     }
 }

@@ -12,13 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Roms\Guess">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Roms\IBMLogo.ch8">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Roms\Landing.ch8">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Roms\Maze.ch8">
