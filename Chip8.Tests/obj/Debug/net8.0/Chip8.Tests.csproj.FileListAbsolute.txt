@@ -7,10 +7,8 @@ D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\testhost.exe
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\xunit.runner.reporters.netcoreapp10.dll
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\xunit.runner.utility.netcoreapp10.dll
-D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Roms\Guess
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Roms\IBMLogo.ch8
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Roms\INVADERS
-D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Roms\Landing.ch8
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Roms\Maze.ch8
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Chip8.Tests.deps.json
 D:\Source\Chip8\Chip8.Tests\bin\Debug\net8.0\Chip8.Tests.runtimeconfig.json

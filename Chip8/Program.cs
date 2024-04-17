@@ -37,30 +37,30 @@ namespace Chip8
             var cpu = new CPU();
             cpu.Initialize();
             
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                Console.WriteLine("The specified ROM file does not exist.");
+                return; 
+            }
+
+            Console.WriteLine($"Loading ROM: {filePath}");
             try
             {
-                using (BinaryReader reader = new BinaryReader(new FileStream(filePath, FileMode.Open)))
-                {
-                    int startAddress = 0x200;
-                    while (reader.BaseStream.Position < reader.BaseStream.Length)
-                    {
-                        cpu.RAM[startAddress++] = reader.ReadByte();
-                    }
-                }
+                LoadRomIntoMemory(cpu, filePath);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine($"Failed to load ROM: {e.Message}");
+                return; 
             }
             
             while (true)
             {
                 ExecuteOpcode(cpu);
-                // UpdateTimers(cpu); //TODO 
 
                 if (cpu.IsDirty)
                 {
+                    Console.Clear();
                     cpu.RenderDisplay();
                     cpu.IsDirty = false;
                 }
@@ -68,10 +68,21 @@ namespace Chip8
             }
         }
         
+        static void LoadRomIntoMemory(CPU cpu, string filePath)
+        {
+            using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath)))
+            {
+                int startAddress = 0x200;
+                while (reader.BaseStream.Position < reader.BaseStream.Length)
+                {
+                    cpu.RAM[startAddress++] = reader.ReadByte();
+                }
+            }
+        }
+        
         static void ExecuteOpcode(CPU cpu)
         {
             ushort opcode = FetchOpcode(cpu);
-            cpu.PC += 2; 
             DecodeAndExecute(cpu, opcode);
         }
         

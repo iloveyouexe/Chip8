@@ -10,7 +10,16 @@ namespace Chip8.Tests
         public OpcodeTests()
         {
             cpu = new CPU();
-            cpu.PC = 0x200;
+            RAM = new byte[4096];
+            Registers = new byte[16];
+            Display = new byte[64 * 32];
+            PC = 0x200; 
+            SP = 0;
+            I = 0;
+            Keyboard = 0;
+            DelayTimer = 0;
+            SoundTimer = 0;
+            IsDirty = true; 
         }
         
         [Fact]
@@ -516,12 +525,28 @@ namespace Chip8.Tests
         }
 
         [Fact]
-        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy2IfKeyPressed()
+        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy4IfKeyPressed()
         {
             // Arrange
             ushort opcode = 0xE09E; 
             cpu.Registers[0] = 0xA; 
-            cpu.Keyboard = (byte)(1 << cpu.Registers[0]); // pressing key here
+            cpu.Keyboard = (ushort)(1 << cpu.Registers[0]); // pressing key here
+            ushort initialPC = cpu.PC;
+
+            // Act
+            cpu.SkipIfKeyIsPressed_EX9E(opcode);
+
+            // Assert
+            Assert.Equal(initialPC + 4, cpu.PC); 
+        }
+        
+        [Fact]
+        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy2IfKeyNotPressed()
+        {
+            // Arrange
+            ushort opcode = 0xE09E; 
+            cpu.Registers[0] = 0xA; 
+            cpu.Keyboard = 0x0; 
             ushort initialPC = cpu.PC;
 
             // Act
@@ -532,20 +557,36 @@ namespace Chip8.Tests
         }
 
         [Fact]
-        public void SkipIfKeyIsPressed_EX9E_IncrementsPCBy4IfKeyNotPressed()
+        public void SkipIfKeyIsNotPressed_EXA1_SkipsNextInstructionIfKeyNotPressed()
         {
             // Arrange
-            ushort opcode = 0xE09E; 
-            cpu.Registers[0] = 0xA; 
-            cpu.Keyboard = 0x0; // no key is pressed here
+            ushort opcode = 0xEA1; 
+            cpu.Registers[0xA] = 0x5; 
+            cpu.Keyboard = 0x0; 
             ushort initialPC = cpu.PC;
 
             // Act
-            cpu.SkipIfKeyIsPressed_EX9E(opcode);
+            cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
 
             // Assert
             Assert.Equal(initialPC + 4, cpu.PC); 
         }
         
+        [Fact]
+        public void SkipIfKeyIsNotPressed_EXA1_DoesNotSkipNextInstructionIfKeyPressed()
+        {
+            // Arrange
+            ushort opcode = 0xEA1;
+            cpu.Registers[0xA] = 0x5;
+            cpu.Keyboard = (ushort)(1 << 5); // Key 5 is pressed
+            ushort initialPC = cpu.PC;
+
+            // Act
+            cpu.SkipIfKeyIsNotPressed_EXA1(opcode);
+
+            // Assert
+            Assert.Equal(initialPC + 2, cpu.PC); 
+        }
+
     }
 }
