@@ -290,8 +290,6 @@ namespace Chip8
                 PC += 2; 
             }
         }
-
-
         
         public void SetVxToDelayTimer_FX07(ushort opcode)
         {
@@ -396,6 +394,5 @@ namespace Chip8
             SoundTimer = 0;
             IsDirty = true; 
         }
-        
     }
 }
