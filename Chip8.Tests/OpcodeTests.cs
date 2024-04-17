@@ -10,16 +10,16 @@ namespace Chip8.Tests
         public OpcodeTests()
         {
             cpu = new CPU();
-            RAM = new byte[4096];
-            Registers = new byte[16];
-            Display = new byte[64 * 32];
-            PC = 0x200; 
-            SP = 0;
-            I = 0;
-            Keyboard = 0;
-            DelayTimer = 0;
-            SoundTimer = 0;
-            IsDirty = true; 
+            cpu.RAM = new byte[4096];
+            cpu.Registers = new byte[16];
+            cpu.Display = new byte[64 * 32];
+            cpu.PC = 0x200;
+            cpu.SP = 0;
+            cpu.I = 0;
+            cpu.Keyboard = 0;
+            cpu.DelayTimer = 0;
+            cpu.SoundTimer = 0;
+            cpu.IsDirty = true;
         }
         
         [Fact]

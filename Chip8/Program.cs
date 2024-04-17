@@ -83,6 +83,7 @@ namespace Chip8
         static void ExecuteOpcode(CPU cpu)
         {
             ushort opcode = FetchOpcode(cpu);
+            cpu.PC += 2;
             DecodeAndExecute(cpu, opcode);
         }
         
