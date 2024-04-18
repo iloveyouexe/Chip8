@@ -394,5 +394,28 @@ namespace Chip8
             SoundTimer = 0;
             IsDirty = true; 
         }
+        
+        public void CheckIfIsDirty(CPU cpu)
+        {
+            if (cpu.IsDirty)
+            {
+                Console.Clear();
+                cpu.RenderDisplay();
+                cpu.IsDirty = false;
+            }
+        }
+        
+        public void ExecuteOpcode(CPU cpu)
+        {
+            ushort opcode = FetchOpcode(cpu);
+            Program.DecodeAndExecute(cpu, opcode);
+        }
+        
+        public static ushort FetchOpcode(CPU cpu)
+        {
+            var highByte = cpu.RAM[cpu.PC];
+            var lowByte = cpu.RAM[cpu.PC + 1];
+            return (ushort)(highByte << 8 | lowByte);
+        }
     }
 }

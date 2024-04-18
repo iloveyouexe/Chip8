@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Chip8.Utils;
 
 namespace Chip8
 {
@@ -9,93 +10,17 @@ namespace Chip8
     {
         static void Main(string[] args)
         {
-            string? filePath = "";
+            if (RomReader.SelectRomFile(out var cpu)) return;
 
-            Console.WriteLine("Pick which ROM you'd like to load from the list available below. ");
-            Console.WriteLine("1. for an IBM logo, this is going to make a million dollars. ");
-            Console.WriteLine("2. for a Maze demo. ");
-            Console.WriteLine("3. for a Space Invaders thing ");
-
-            if (int.TryParse(Console.ReadLine(), out var option))
-            {
-                switch (option)
-                {
-                    case 1:
-                        filePath = @"Roms\IBMLogo.ch8";
-                        break;
-                    case 2:
-                        filePath = @"Roms\Maze.ch8";
-                        break;
-                    case 3:
-                        filePath = @"Roms\INVADERS";
-                        break;
-                    default:
-                        Console.WriteLine("Select an actual option");
-                        break;
-                }
-            }
-            var cpu = new CPU();
-            cpu.Initialize();
-            
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-            {
-                Console.WriteLine("The specified ROM file does not exist.");
-                return; 
-            }
-
-            Console.WriteLine($"Loading ROM: {filePath}");
-            try
-            {
-                LoadRomIntoMemory(cpu, filePath);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Failed to load ROM: {e.Message}");
-                return; 
-            }
-            
             while (true)
             {
-                ExecuteOpcode(cpu);
-
-                if (cpu.IsDirty)
-                {
-                    Console.Clear();
-                    cpu.RenderDisplay();
-                    cpu.IsDirty = false;
-                }
+                cpu.ExecuteOpcode(cpu);
+                cpu.CheckIfIsDirty(cpu);
                 Thread.Sleep(1000 / 60);
             }
         }
-        
-        static void LoadRomIntoMemory(CPU cpu, string filePath)
-        {
-            using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath)))
-            {
-                int startAddress = 0x200;
-                while (reader.BaseStream.Position < reader.BaseStream.Length)
-                {
-                    cpu.RAM[startAddress++] = reader.ReadByte();
-                }
-            }
-        }
-        
-        static void ExecuteOpcode(CPU cpu)
-        {
-            ushort opcode = FetchOpcode(cpu);
-            cpu.PC += 2;
-            DecodeAndExecute(cpu, opcode);
-        }
-        
-        static ushort FetchOpcode(CPU cpu)
-        {
-            var highByte = cpu.RAM[cpu.PC];
-            var lowByte = cpu.RAM[cpu.PC + 1];
-            return (ushort)(highByte << 8 | lowByte);
-        }
 
-
-        static void DecodeAndExecute(CPU cpu, ushort opcode)
+        public static void DecodeAndExecute(CPU cpu, ushort opcode)
         {
             switch (opcode & 0xF000)
             {
