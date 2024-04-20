@@ -281,7 +281,7 @@ namespace Chip8
         public void SkipIfKeyIsNotPressed_EXA1(ushort opcode)
         {
             int registerIndex = (opcode & 0x0F00) >> 8;
-            if ((Keyboard & (1 << Registers[registerIndex])) == 0)
+            if ((Keyboard & (Registers[registerIndex])) == 0)
             {
                 PC += 4; 
             }

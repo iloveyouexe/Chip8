@@ -16,3 +16,5 @@ D:\Source\Chip8\Chip8\obj\Debug\net8.0\Chip8.sourcelink.json
 D:\Source\Chip8\Chip8\bin\Debug\net8.0\Roms\IBMLogo.ch8
 D:\Source\Chip8\Chip8\bin\Debug\net8.0\Roms\Maze.ch8
 D:\Source\Chip8\Chip8\bin\Debug\net8.0\Roms\INVADERS
+D:\Source\Chip8\Chip8\bin\Debug\net8.0\Roms\TEST
+D:\Source\Chip8\Chip8\bin\Debug\net8.0\Roms\TEST2

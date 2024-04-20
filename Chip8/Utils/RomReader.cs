@@ -21,6 +21,9 @@ namespace Chip8.Utils;
             Console.WriteLine("1. for an IBM logo, this is going to make a million dollars. ");
             Console.WriteLine("2. for a Maze demo. ");
             Console.WriteLine("3. for a Space Invaders thing ");
+            Console.WriteLine("4. Test");
+            Console.WriteLine("5. Test2");
+            Console.WriteLine("6. Chip8 SplashScreen Test");
 
             if (int.TryParse(Console.ReadLine(), out var option))
             {
@@ -34,6 +37,15 @@ namespace Chip8.Utils;
                         break;
                     case 3:
                         filePath = @"Roms\INVADERS";
+                        break;
+                    case 4:
+                        filePath = @"Roms\TEST";
+                        break;
+                    case 5:
+                        filePath = @"Roms\TEST2";
+                        break;
+                    case 6:
+                        filePath = @"Roms\1-chip8-logo.ch8";
                         break;
                     default:
                         Console.WriteLine("Select an actual option");
