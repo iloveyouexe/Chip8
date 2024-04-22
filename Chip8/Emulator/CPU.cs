@@ -263,8 +263,9 @@ namespace Chip8
                     }
                 }
             }
+            System.IO.File.AppendAllText("debug_log.txt", $"Drew sprite at x: {x}, y: {y} with height: {height}\n");
         }
-        
+
         public void SkipIfKeyIsPressed_EX9E(ushort opcode)
         {
             int registerIndex = (opcode & 0x0F00) >> 8;

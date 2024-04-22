@@ -11,7 +11,7 @@ namespace Chip8
         static void Main(string[] args)
         {
             if (RomReader.SelectRomFile(out var cpu)) return;
-
+            
             while (true)
             {
                 cpu.ExecuteOpcode(cpu);
