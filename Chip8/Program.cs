@@ -26,15 +26,11 @@ namespace Chip8
             {
                 case 0x0000:
                     if (opcode == 0x00E0)
-                    {
                         // CLS
                         cpu.ClearScreen_00E0(opcode);
-                    }
                     else if (opcode == 0x00EE)
-                    {
                         // RET
                         cpu.ReturnFromSubroutine_00EE(opcode);
-                    }
                     break;
                 case 0x1000:
                     // JP addr
