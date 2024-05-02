@@ -77,8 +77,7 @@ namespace Chip8.Utils;
 
             return false;
         }
-
-
+        
         public static void LoadRomIntoMemory(CPU cpu, string filePath)
         {
             using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath)))

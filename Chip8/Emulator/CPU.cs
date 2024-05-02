@@ -21,18 +21,18 @@ namespace Chip8
         public void RenderDisplay()
         {
             StringBuilder displayBuffer = new StringBuilder();
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0, 0);  
     
             for (int y = 0; y < 32; y++) 
             {
                 for (int x = 0; x < 64; x++) 
                 {
-                    int index = x + (y * 64);
-                    displayBuffer.Append(Display[index] == 1 ? "#" : ".");
+                    int index = x + (y * 64); 
+                    displayBuffer.Append(Display[index] == 1 ? "#" : "."); 
                 }
                 displayBuffer.AppendLine(); 
             }
-            Console.Write(displayBuffer.ToString());
+            Console.Write(displayBuffer.ToString());  
         }
         
         public void ClearScreen_00E0(ushort opcode)
@@ -236,36 +236,37 @@ namespace Chip8
         
         public void DrawSprite_DXYN(ushort opcode)
         {
-            var x = Registers[(opcode & 0x0F00) >> 8];
-            var y = Registers[(opcode & 0x00F0) >> 4];
-            ushort height = (ushort)(opcode & 0x000F);
+            var x = Registers[(opcode & 0x0F00) >> 8]; 
+            var y = Registers[(opcode & 0x00F0) >> 4]; 
+            ushort height = (ushort)(opcode & 0x000F);  
             ushort pixel;
 
-            Registers[0xF] = 0;
+            Registers[0xF] = 0;  
 
             for (int yLine = 0; yLine < height; yLine++)
             {
-                pixel = RAM[I + yLine];
+                pixel = RAM[I + yLine];  
                 for (int xLine = 0; xLine < 8; xLine++)
                 {
-                    if ((pixel & (0x80 >> xLine)) != 0)
+                    if ((pixel & (0x80 >> xLine)) != 0) 
                     {
                         int xCoord = (x + xLine) % 64; 
-                        int yCoord = (y + yLine) % 32; 
-                        int index = xCoord + (yCoord * 64);
+                        int yCoord = (y + yLine) % 32;  
+                        int index = xCoord + (yCoord * 64);  
 
-                        if (Display[index] == 1)
+                        if (Display[index] == 1) 
                         {
-                            Registers[0xF] = 1; 
+                            Registers[0xF] = 1;
                         }
                         Display[index] ^= 1; 
-                        IsDirty = true;
+                        IsDirty = true;  
                     }
                 }
             }
-            System.IO.File.AppendAllText("debug_log.txt", $"Drew sprite at x: {x}, y: {y} with height: {height}\n");
+            PC += 2;
+            System.IO.File.AppendAllText("debug_log.txt", $"Drew sprite at x: {x}, y: {y}, height: {height}\n");  // Log the operation
         }
-
+        
         public void SkipIfKeyIsPressed_EX9E(ushort opcode)
         {
             int registerIndex = (opcode & 0x0F00) >> 8;
@@ -409,7 +410,9 @@ namespace Chip8
         public void ExecuteOpcode(CPU cpu)
         {
             ushort opcode = FetchOpcode(cpu);
+            System.IO.File.AppendAllText("debug_log.txt", $"Executing opcode at PC: {cpu.PC}, Opcode: {opcode:X4}\n");
             Program.DecodeAndExecute(cpu, opcode);
+            System.IO.File.AppendAllText("debug_log.txt", $"PC after execution: {cpu.PC}\n");
         }
         
         public static ushort FetchOpcode(CPU cpu)
