@@ -17,6 +17,7 @@ namespace Chip8
         public byte[] Display = new byte[64 * 32];
         public bool IsDirty = false;
         private Random random = new Random();
+        private bool isAlsoFlagged = false;
         
         public void RenderDisplay()
         {
