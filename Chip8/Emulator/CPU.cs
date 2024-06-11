@@ -23,7 +23,6 @@ namespace Chip8
         {
             StringBuilder displayBuffer = new StringBuilder();
             Console.SetCursorPosition(0, 0);  
-    
             for (int y = 0; y < 32; y++) 
             {
                 for (int x = 0; x < 64; x++) 
@@ -32,7 +31,7 @@ namespace Chip8
                     displayBuffer.Append(Display[index] == 1 ? "#" : "."); 
                 }
                 displayBuffer.AppendLine(); 
-            }
+            } 
             Console.Write(displayBuffer.ToString());  
         }
         
