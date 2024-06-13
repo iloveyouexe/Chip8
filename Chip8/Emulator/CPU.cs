@@ -6,7 +6,7 @@ namespace Chip8
     public class CPU
     {
         public byte[] RAM = new byte[4096];
-        public byte[] Registers = new byte[16]; // V[0x0] => V[0xF} hexidecimal 0-16
+        public byte[] Registers = new byte[16]; // V[0x0] => V[0xF} hexidecimal 0-16 
         public byte DelayTimer; //TODO
         public byte SoundTimer; //TODO 
         public ushort Keyboard;
