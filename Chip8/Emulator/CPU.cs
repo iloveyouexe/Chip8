@@ -12,11 +12,10 @@ namespace Chip8
         public ushort Keyboard;
         public ushort I = 0;
         public ushort[] Stack = new ushort[24];
-        public byte SP; // stack pointer
-        public ushort PC; // program counter
+        public byte SP; 
+        public ushort PC; 
         public byte[] Display = new byte[64 * 32];
         public bool IsDirty = false;
-        
         private Random random = new Random();
         private bool isAlsoFlagged = false;
         
