@@ -7,8 +7,8 @@ namespace Chip8
     {
         public byte[] RAM = new byte[4096];
         public byte[] Registers = new byte[16]; // V[0x0] => V[0xF} hexidecimal 0-16 
-        public byte DelayTimer; //TODO
-        public byte SoundTimer; //TODO 
+        public byte DelayTimer; 
+        public byte SoundTimer; 
         public ushort Keyboard;
         public ushort I = 0;
         public ushort[] Stack = new ushort[24];
