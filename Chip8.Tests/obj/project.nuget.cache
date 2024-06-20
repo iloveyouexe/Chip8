@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vrX02ubHlMIiLu0x9/RkCo/VHbsII+WERXcyVPixLnJ2ejiU+ezCF/8hhpUVdihxGoMh1x6QUx4TpB7dexc4eA==",
+  "dgSpecHash": "mQqxQi4FV1Kfn4qNEgZ28ck7Iecg+w5IKv+ina7ETv5mwxz7DaSOyHEzaP7Wkyih7FN8WJWUp3R9FiOOuKt7dQ==",
   "success": true,
   "projectFilePath": "D:\\Source\\Chip8\\Chip8.Tests\\Chip8.Tests.csproj",
   "expectedPackageFiles": [
