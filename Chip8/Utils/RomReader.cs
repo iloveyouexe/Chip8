@@ -57,7 +57,6 @@ namespace Chip8.Utils;
         }
         
         
-        
         public static bool DisplayRomFileSelectionResponse(CPU cpu, string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
